@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "ESNext",
     "lib": ["es6"],
-    "module": "commonjs",
+    "module": "ESNext",
     "rootDir": "src",
-    "resolveJsonModule": true,
     "allowJs": true,
     "outDir": "build",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true ,
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*.ts", "src/**/*.js"], // Includes both JS and TS files from the source folder
+  "exclude": ["node_modules", "build"]   
 }
