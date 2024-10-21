@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load variables from .env
+dotenv.config(); // Loa
 
 const DB_CONN_STRING = process.env.DB_CONN_STRING || '';
 
