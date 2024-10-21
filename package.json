@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "job_tracker": "file:",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "mongodb": "^6.9.0",
