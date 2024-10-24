@@ -1,3 +1,14 @@
+"use client"
+
+import { ClientAuthWrapper } from "../components/ClientAuthWrapper";
+import LoginButton from "../components/LoginButton";
+
 export default function Login() {
-  return <h1>Hello World</h1>;
+  return (
+    <ClientAuthWrapper>
+    <div className="flex h-screen justify-center items-center">
+      <LoginButton />
+    </div>
+    </ClientAuthWrapper>
+  );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { Auth0Provider } from "@auth0/auth0-react";
-import { ProtectedContent } from "./ProtectedContent";
 
 // Due to the React Auth0 SDK being strictly client side, we should try to authenticate as little as required, to reduce client side rendering.
 export function ClientAuthWrapper({ children }: { children: React.ReactNode }) {
@@ -13,7 +12,7 @@ export function ClientAuthWrapper({ children }: { children: React.ReactNode }) {
         redirect_uri: `${typeof window !== "undefined" ? window.location.origin : ""}/applications`,
       }}
     >
-      <ProtectedContent>{children}</ProtectedContent>
+      {children}
     </Auth0Provider>
   );
 }
