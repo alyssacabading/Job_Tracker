@@ -17,6 +17,10 @@ const config: Config = {
         customdarkgrey: "#5A5A5A",
         customblack: "#3C3C3C"
       },
+      fontFamily: {
+        alata: ['Alata', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
     },
   },
   plugins: [],

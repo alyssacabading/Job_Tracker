@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
+"use client"
+import { ClientAuthWrapper } from "./components/ClientAuthWrapper";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Job Tracker",
-  description: "",
-};
+
 
 export default function RootLayout({
   children,
@@ -16,7 +14,9 @@ export default function RootLayout({
       <body
         className={`antialiased bg-customsoftwhite`}
       >
+        <ClientAuthWrapper>
           {children}
+        </ClientAuthWrapper>
       </body>
     </html>
   );
