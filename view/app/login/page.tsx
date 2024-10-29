@@ -1,8 +1,20 @@
 "use client";
 
 import LoginButton from "../components/LoginButton";
+import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Login() {
+  const { loginWithRedirect } = useAuth0();
+
+  const handleGoogleLogin = async () => {
+    await loginWithRedirect({
+      authorizationParams: {
+        connection: 'google-oauth2',
+      },
+    });
+  }
+
   return (
       <div className="grid grid-cols-2 h-screen">
         {/* Left Sidebar */}
@@ -17,8 +29,15 @@ export default function Login() {
         </div>
 
         {/* Right Side (Login Button) */}
-        <div className="flex justify-center items-center">
-          <LoginButton className="px-16 py-4 text-2xl rounded-lg transition-all bg-black text-white hover:bg-white hover:text-black border-2 border-black" />
+        <div className="flex flex-col items-center justify-center p-8 space-y-4 w-full">
+          <LoginButton className="w-96 px-8 py-2 text-lg rounded-lg transition-all bg-black text-white hover:bg-customblue hover:border-customblue border-2 border-black" />
+          <button
+            onClick={handleGoogleLogin}
+            className="w-96 px-8 py-2 text-lg rounded-lg transition-all bg-white text-black hover:bg-customlightestgrey hover:text-black hover:border-customlightestgrey border-2 border-customlightestgrey"
+          >
+            <img src="/google-icon.webp" alt="Sign In with Google" className="h-6 w-6 inline-block mr-2" />
+            Sign In with Google
+          </button>
         </div>
       </div>
   );

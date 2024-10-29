@@ -31,13 +31,13 @@ export default function LoginButton({ className = "" }: LoginButtonProps) {
   }
 
   return (
-    <div>
+    <div className="w-full flex items-center justify-center">
       {!isAuthenticated ? (
         <button
           onClick={handleLogin}
           className={`${className}`}
         >
-          Login
+          Log In
         </button>
       ) : (
         <p>You are already logged in!</p>
