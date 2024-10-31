@@ -4,13 +4,50 @@ import { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Chevron icons
 import AddApplicationModal from "./AddApplicationModal";
 
-export default function Applications() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+const defaultApplications = [
+  {
+    id: 1,
+    title: "Backend Internship",
+    company: "Notion",
+    status: "Interview",
+    skills: "React",
+    contacts: "Andrew Atef",
+  },
+  {
+    id: 2,
+    title: "Software Engineer",
+    company: "Google",
+    status: "Applied",
+    skills: "JavaScript, Python",
+    contacts: "John Doe",
+  },
+  {
+    id: 3,
+    title: "Data Scientist",
+    company: "Facebook",
+    status: "Phone Screen",
+    skills: "Python, SQL",
+    contacts: "Jane Smith",
+  },
+  {
+    id: 4,
+    title: "Product Manager",
+    company: "Amazon",
+    status: "Offer",
+    skills: "Product Management",
+    contacts: "Mark Johnson",
+  },
+];
 
-  // Toggle the accordion open/close
-  const toggleAccordion = () => {
-    setIsOpen(!isOpen);
+export default function Applications() {
+  const [openAccordions, setOpenAccordions] = useState<number[]>([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [apps, setApps] = useState(defaultApplications);
+
+  const toggleAccordion = (id: number) => {
+    setOpenAccordions((prev) =>
+      prev.includes(id) ? prev.filter((accordionId) => accordionId !== id) : [...prev, id]
+    );
   };
 
   // Open the modal
@@ -21,6 +58,13 @@ export default function Applications() {
   // Close the modal
   const closeModal = () => {
     setIsAddModalOpen(false);
+  };
+
+  const addApplication = (application: any) => {
+    setApps((prev) => [
+      ...prev,
+      { ...application, id: prev.length + 1}
+    ]);
   };
 
   return (
@@ -34,33 +78,36 @@ export default function Applications() {
         </button>
       </div>
 
-      <div
-        className="w-full bg-white rounded-lg shadow-2xl p-4 cursor-pointer"
-        onClick={toggleAccordion}
-      >
-        <div className="flex justify-between items-center">
-          <h2 className="text-customdarkgrey text-xl font-bold">Notion Internship</h2>
-          <div className="text-customdarkgrey">
-            {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+      {apps.map((application) => (
+        <div
+          key={application.id}
+          className="w-full bg-white rounded-lg shadow-xl p-4 cursor-pointer mb-5"
+          onClick={() => toggleAccordion(application.id)}
+        >
+          <div className="flex justify-between items-center">
+            <h2 className="text-customdarkgrey text-xl font-bold">{application.title} @ {application.company}</h2>
+            <div className="text-customdarkgrey">
+              {openAccordions.includes(application.id) ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
           </div>
+
+          {openAccordions.includes(application.id) && (
+            <div className="text-left text-customdarkgrey mt-4">
+              <p className="text-lg mb-2">
+                <strong>Status:</strong> {application.status}
+              </p>
+              <p className="text-lg mb-2">
+                <strong>Skills:</strong> {application.skills}
+              </p>
+              <p className="text-lg">
+                <strong>Relevant Contacts:</strong> {application.contacts}
+              </p>
+            </div>
+          )}
         </div>
+      ))}
 
-        {isOpen && (
-          <div className="text-left text-customdarkgrey mt-4">
-            <p className="text-lg mb-2">
-              <strong>Status:</strong> Interview
-            </p>
-            <p className="text-lg mb-2">
-              <strong>Skills:</strong> React
-            </p>
-            <p className="text-lg">
-              <strong>Relevant Contacts:</strong> Andrew Atef
-            </p>
-          </div>
-        )}
-      </div>
-
-      <AddApplicationModal isOpen={isAddModalOpen} onClose={closeModal} />
+      <AddApplicationModal isOpen={isAddModalOpen} onClose={closeModal} addApplication={addApplication} />
     </div>
   );
 }

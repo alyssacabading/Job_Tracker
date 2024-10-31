@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { PiSuitcaseBold } from "react-icons/pi";
 
-const AddApplicationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: boolean; onClose: () => void; addApplication: (application: any) => void }) => {
   const [applicationData, setApplicationData] = useState({
-      jobTitle: "",
+      title: "",
       company: "",
       status: "",
       skills: "",
@@ -20,6 +20,7 @@ const AddApplicationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       console.log(applicationData);
+      addApplication(applicationData);
       onClose();
   };
 
@@ -47,11 +48,11 @@ const AddApplicationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col mb-2">
-            <label htmlFor="jobTitle" className="text-s font-bold mb-2">Job Title*</label>
+            <label htmlFor="title" className="text-s font-bold mb-2">Job Title*</label>
             <input
               type="text"
-              name="jobTitle"
-              value={applicationData.jobTitle}
+              name="title"
+              value={applicationData.title}
               onChange={handleChange}
               placeholder="Job Title"
               className="mb-4 p-2 border rounded w-full placeholder-italic"
