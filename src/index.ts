@@ -4,15 +4,18 @@ import dotenv from 'dotenv';
 import jobRoutes from './routes/jobRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import { authMiddleware } from './middlewares/authMiddleware.js';
 
 dotenv.config();
 const app: Application = express();
 app.use(express.json());
 
-// Routes
-app.use('/api/users', userRoutes);
-app.use('/api/jobs', jobRoutes); 
-app.use('/api/contacts', contactRoutes);
+// Routes (routes with authMiddleware require authentication)
+app.use('/api/users', authMiddleware, userRoutes);
+app.use('/api/jobs', authMiddleware, jobRoutes); 
+app.use('/api/contacts', authMiddleware, contactRoutes);
+app.use('/api/auth', authRoutes);
 
 const startServer = async () => {
   await connectToMongoDB(); // Connect to MongoDB
