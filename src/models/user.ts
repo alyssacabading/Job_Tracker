@@ -14,6 +14,7 @@ const userSchema: Schema = new Schema({
   password: { type: String, required: true },
 });
 
+// Hashes the user's password before saving the user
 userSchema.pre<IUser>('save', async function (next) {
   const user = this as IUser;
   if (!user.isModified('password')) return next();
@@ -21,6 +22,7 @@ userSchema.pre<IUser>('save', async function (next) {
   next();
 });
 
+// Implementation for comparing passwords
 userSchema.methods.comparePassword = function (password: string): Promise<boolean> {
   return bcrypt.compare(password, this.password);
 };
