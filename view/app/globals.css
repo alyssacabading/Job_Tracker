@@ -19,3 +19,8 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Custom CSS for italic placeholder */
+.placeholder-italic::placeholder {
+  font-style: italic;
+}
