@@ -4,7 +4,18 @@ import { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Chevron icons
 import AddApplicationModal from "./AddApplicationModal";
 
-const defaultApplications = [
+// TODO: Update the Application interface to align with the backend
+export interface Application {
+  id: number;
+  title: string;
+  company: string;
+  status: string;
+  skills?: string;
+  contacts?: string;
+  salary?: string;
+}
+
+const defaultApplications: Application[] = [
   {
     id: 1,
     title: "Backend Internship",
@@ -60,7 +71,7 @@ export default function Applications() {
     setIsAddModalOpen(false);
   };
 
-  const addApplication = (application: any) => {
+  const addApplication = (application: Application) => {
     setApps((prev) => [
       ...prev,
       { ...application, id: prev.length + 1}

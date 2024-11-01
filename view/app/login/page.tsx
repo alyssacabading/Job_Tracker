@@ -2,6 +2,7 @@
 
 import LoginButton from "../components/LoginButton";
 import React from "react";
+import Image from "next/image";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Login() {
@@ -33,9 +34,11 @@ export default function Login() {
           <LoginButton className="w-96 px-8 py-2 text-lg rounded-lg transition-all bg-black text-white hover:bg-customblue hover:border-customblue border-2 border-black" />
           <button
             onClick={handleGoogleLogin}
-            className="w-96 px-8 py-2 text-lg rounded-lg transition-all bg-white text-black hover:bg-customlightestgrey hover:text-black hover:border-customlightestgrey border-2 border-customlightestgrey"
+            className="flex justify-center items-center w-96 px-8 py-2 text-lg rounded-lg transition-all bg-white text-black hover:bg-customlightestgrey hover:text-black hover:border-customlightestgrey border-2 border-customlightestgrey"
           >
-            <img src="/google-icon.webp" alt="Sign In with Google" className="h-6 w-6 inline-block mr-2" />
+            <div className="mr-2">
+              <Image src="/google-icon.webp" alt="Sign In with Google" width={24} height={24} />
+            </div>
             Sign In with Google
           </button>
         </div>

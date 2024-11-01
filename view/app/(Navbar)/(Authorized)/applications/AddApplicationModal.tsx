@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { PiSuitcaseBold } from "react-icons/pi";
+import { Application } from "./page";
 
-const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: boolean; onClose: () => void; addApplication: (application: any) => void }) => {
-  const [applicationData, setApplicationData] = useState({
-      title: "",
-      company: "",
-      status: "",
-      skills: "",
-      salary: "",
-      contacts: "",
+const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: boolean; onClose: () => void; addApplication: (application: Application) => void }) => {
+  const [applicationData, setApplicationData] = useState<Application>({
+    id: Date.now(), // Generate a unique id
+    title: "",
+    company: "",
+    status: "",
+    skills: "",
+    salary: "",
+    contacts: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
