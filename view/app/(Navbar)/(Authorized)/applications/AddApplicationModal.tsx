@@ -39,6 +39,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
       onClick={handleOverlayClick}
     >
+      {/* Add the modal content */}
       <div className="bg-white p-6 rounded-lg w-[600px]">
         <div className="flex justify-between items-center mb-4">
           <div className="flex align-baseline">
@@ -49,6 +50,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Add the title form field */}
           <div className="flex flex-col mb-2">
             <label htmlFor="title" className="text-s font-bold mb-2">Job Title*</label>
             <input
@@ -61,6 +63,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
             />
           </div>
 
+          {/* Add the company form field */}
           <div className="flex flex-col mb-2">
             <label htmlFor="company" className="text-s font-bold mb-2">Company*</label>
             <input
@@ -73,6 +76,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
             />
           </div>
 
+          {/* Add the application status form field */}
           <div className="flex flex-col mb-2">
             <label htmlFor="status" className="text-s font-bold mb-2">Application Status*</label>
             <input
@@ -85,6 +89,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
             />
           </div>
 
+          {/* Add the skills form field */}
           <div className="flex flex-col mb-2">
             <label htmlFor="skills" className="text-s font-bold mb-2">Skills</label>
             <input
@@ -97,6 +102,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
             />
           </div>
 
+          {/* Add the salary form field */}
           <div className="flex flex-col mb-2">
             <label htmlFor="salary" className="text-s font-bold mb-2">Salary</label>
             <input
@@ -109,6 +115,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
             />
           </div>
 
+          {/* Add the contacts form field */}
           <div className="flex flex-col mb-2">
             <label htmlFor="contacts" className="text-s font-bold mb-2">Relevant Contacts</label>
             <input
@@ -121,6 +128,7 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
             />
           </div>
           
+          {/* Add the cancel and add form buttons */}
           <div className="text-xs flex justify-end space-x-3">
             <button 
               type="button" 
