@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import jobRoutes from './routes/jobRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import skillRoutes from './routes/skillRoutes.js';
 
 dotenv.config();
 const app: Application = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes); 
 app.use('/api/contacts', contactRoutes);
+app.use('/api/skills', skillRoutes);
 
 const startServer = async () => {
   await connectToMongoDB(); // Connect to MongoDB

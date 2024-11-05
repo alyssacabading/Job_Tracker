@@ -1,4 +1,5 @@
-import User, { IUser } from '../models/User.js';
+import User, { IUser } from '../models/user.js';
+import Skill from '../models/skill.js';
 
 export class UserService {
     async createUser (userData: IUser): Promise<IUser> {
@@ -20,5 +21,25 @@ export class UserService {
 
     async deleteUser(userId: string): Promise<IUser | null> {
         return await User.findByIdAndDelete(userId);
+    }
+
+    // Functions using User Skills
+
+    async addSkillToUser(userId: string, skillId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        const skill = await Skill.findById(skillId);
+        if (!user) throw new Error('User not found');
+        if (!skill) throw new Error('Skill not found');
+        
+        await user.addSkill(skill._id);
+        return user;
+      }
+
+    async removeSkillFromUser(userId: string, skillId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        if (!user) throw new Error('User not found');
+
+        await user.removeSkill(skillId);
+        return user;
     }
 }
