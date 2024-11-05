@@ -1,37 +1,37 @@
 import React, { useState } from "react";
 import { RiCloseLargeFill } from "react-icons/ri";
-import { PiSuitcaseBold } from "react-icons/pi";
-import { Application } from "./page";
-import ApplicationForm from "./ApplicationForm";
+import { GoPerson } from "react-icons/go";
+import { IContact } from "./page";
+import ContactForm from "./ContactForm";
 
-const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: boolean; onClose: () => void; addApplication: (application: Application) => void }) => {
-  const [applicationData, setApplicationData] = useState<Application>({
+const AddContactModal = ({ isOpen, onClose, addContact }: { isOpen: boolean; onClose: () => void; addContact: (contact: IContact) => void }) => {
+  const [contactData, setContactData] = useState<IContact>({
     id: Date.now(), // Generate a unique id
-    title: "",
+    firstName: "",
+    lastName: "",
+    position: "",
     company: "",
-    status: "",
-    skills: "",
-    salary: "",
-    contacts: "",
+    email: "",
+    phone: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setApplicationData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target;
+    setContactData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log(applicationData);
-      addApplication(applicationData);
-      onClose();
+    e.preventDefault();
+    console.log(contactData);
+    addContact(contactData);
+    onClose();
   };
 
   const handleSave = () => {
     const event = new Event("submit", { bubbles: true, cancelable: true });
     const form = document.querySelector("form");
     form?.dispatchEvent(event);
-  }
+  };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -50,14 +50,15 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
       <div className="bg-white p-6 rounded-lg w-[600px]">
         <div className="flex justify-between items-center mb-4">
           <div className="flex align-baseline">
-            <PiSuitcaseBold className="text-3xl align-baseline mr-2"/>
-            <h2 className="text-2xl font-bold">Add Application</h2>
+            <GoPerson className="text-3xl align-baseline mr-2"/>
+            <h2 className="text-2xl font-bold">Add Contact</h2>
           </div>
-          <RiCloseLargeFill onClick={onClose} className="cursor-pointer leading-none text-xl text-customdarkgrey hover:text-black transition ease-in-out"/>
+          <RiCloseLargeFill onClick={onClose} className="cursor-pointer text-xl text-customdarkgrey hover:text-black transition ease-in-out" />
         </div>
 
-        <ApplicationForm
-          applicationData={applicationData}
+        {/* Add the ContactForm component */}
+        <ContactForm
+          contactData={contactData}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           handleSave={handleSave}
@@ -68,4 +69,4 @@ const AddApplicationModal = ({ isOpen, onClose, addApplication }: { isOpen: bool
   );
 };
 
-export default AddApplicationModal;
+export default AddContactModal;

@@ -17,6 +17,7 @@ const config: Config = {
         customlightred: "#F7E8E8",
         customlightredhover: "#FBD3D3",
         customsoftwhite: "#FAFAFA",
+        custombglightgrey: "#F6F6F6",
         customlightestgrey: "#E5E5E5",
         customlightgrey: "#7D7D7D",
         customdarkgrey: "#5A5A5A",

@@ -122,7 +122,7 @@ export default function Applications() {
       {apps.map((application) => (
         <div
           key={application.id}
-          className="w-full bg-white rounded-lg shadow-xl p-4 cursor-pointer mb-5"
+          className="w-full bg-white rounded-lg shadow-md p-4 cursor-pointer mb-5"
           onClick={() => toggleAccordion(application.id)}
         >
           {/* Display the application title and company */}

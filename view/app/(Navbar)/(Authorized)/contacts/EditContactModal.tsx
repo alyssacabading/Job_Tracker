@@ -1,59 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RiCloseLargeFill } from "react-icons/ri";
-import { PiSuitcaseBold } from "react-icons/pi";
-import { Application } from "./page";
+import { GoPerson } from "react-icons/go";
+import { IContact } from "./page";
 import ConfirmationModal from "@/app/components/ConfirmationModal";
-import ApplicationForm from "./ApplicationForm";
+import ContactForm from "./ContactForm";
 
-const EditApplicationModal = ({
-  isOpen,
-  onClose,
-  editApplication,
-  deleteApplication,
-  application
+const EditContactModal = ({ 
+  isOpen, 
+  onClose, 
+  contact, 
+  updateContact,
+  deleteContact
 }: {
   isOpen: boolean;
   onClose: () => void;
-  editApplication: (application: Application) => void;
-  deleteApplication: (id: number) => void;
-  application: Application
+  contact: IContact;
+  updateContact: (updatedContact: IContact) => void;
+  deleteContact: (id: number) => void;
 }) => {
-  const [applicationData, setApplicationData] = useState<Application>(application);
+  const [contactData, setContactData] = useState<IContact>(contact);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (application) {
-      setApplicationData(application);
-    }
-  }, [application]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setApplicationData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target;
+    setContactData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log("Editing application: ", applicationData);
-      editApplication(applicationData);
-      onClose();
+    e.preventDefault();
+    updateContact(contactData);
+    onClose();
   };
 
   const handleSave = () => {
     const event = new Event("submit", { bubbles: true, cancelable: true });
     const form = document.querySelector("form");
     form?.dispatchEvent(event);
-  }
+  };
 
   const handleDelete = () => {
     setIsConfirmationModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    deleteApplication(applicationData.id);
+    deleteContact(contactData.id);
     setIsConfirmationModalOpen(false);
     onClose();
-  };
+  }
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -64,21 +57,23 @@ const EditApplicationModal = ({
   if (!isOpen) return null;
 
   return (
-    <div
+    <div 
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
       onClick={handleOverlayClick}
     >
       <div className="bg-white p-6 rounded-lg w-[600px]">
+        {/* Add the modal content */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex align-baseline">
-            <PiSuitcaseBold className="text-3xl align-baseline mr-2 self-center"/>
-            <h2 className="text-2xl font-bold">Edit Application</h2>
+            <GoPerson className="text-3xl align-baseline mr-2"/>
+            <h2 className="text-2xl font-bold">Edit Contact</h2>
           </div>
-          <RiCloseLargeFill onClick={onClose} className="cursor-pointer leading-none text-xl text-customdarkgrey hover:text-black transition ease-in-out"/>
+          <RiCloseLargeFill onClick={onClose} className="cursor-pointer text-xl text-customdarkgrey hover:text-black transition ease-in-out" />
         </div>
 
-        <ApplicationForm
-          applicationData={applicationData}
+        {/* Add the ContactForm component */}
+        <ContactForm
+          contactData={contactData}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           handleSave={handleSave}
@@ -92,10 +87,10 @@ const EditApplicationModal = ({
         isOpen={isConfirmationModalOpen}
         onClose={() => setIsConfirmationModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        message="Are you sure you want to delete this job?"
+        message="Are you sure you want to delete this contact?"
       />
     </div>
   );
 };
 
-export default EditApplicationModal;
+export default EditContactModal;
