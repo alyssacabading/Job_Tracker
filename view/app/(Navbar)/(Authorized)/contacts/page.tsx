@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import ContactSearch from "./ContactSearch";
+import ContactCard from "./ContactCard";
 import AddContactModal from "./AddContactModal";
 import EditContactModal from "./EditContactModal";
-import ContactCard from "./ContactCard";
 
 export interface IContact {
   id: number;
@@ -96,6 +97,11 @@ export default function Contacts() {
     );
   };
 
+  // Delete an existing contact
+  const deleteContact = (id: number) => {
+    setContacts((prev) => prev.filter((contact) => contact.id !== id));
+  };
+
   // Handle search input
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -119,18 +125,10 @@ export default function Contacts() {
       </div>
 
       {/* Add a title and search input for the contacts */}
-      <div className="w-full bg-white rounded-lg shadow-xl p-4 mb-8">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-customdarkgrey text-xl font-bold mb-2">Contacts</h2>
-          <input
-            type="text"
-            placeholder="Search by company"
-            value={searchQuery}
-            onChange={handleSearch}
-            className="p-2 border rounded-lg bg-custombglightgrey border-custombglightgrey w-full placeholder-italic mb-2"
-          />
-        </div>
-      </div>
+      <ContactSearch
+        searchQuery={searchQuery}
+        handleSearch={handleSearch}
+      />
 
       {/* Display all contacts */}
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -143,7 +141,7 @@ export default function Contacts() {
         ))}
       </div>
 
-      {/* Add the AddContactModal */}
+      {/* Display an AddContactModal */}
       <AddContactModal
         isOpen={isAddModalOpen}
         onClose={closeModal}
@@ -157,6 +155,7 @@ export default function Contacts() {
           onClose={closeEditModal}
           contact={selectedContact}
           updateContact={updateContact}
+          deleteContact={deleteContact}
         />
       )}
     </div>
