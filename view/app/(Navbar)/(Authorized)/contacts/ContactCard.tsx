@@ -3,8 +3,8 @@ import { FaEdit } from "react-icons/fa";
 import { IContact } from "./page";
 
 interface ContactCardProps {
-    contact: IContact;
-    onEdit: (contact: IContact) => void;
+  contact: IContact;
+  onEdit: (contact: IContact) => void;
 }
 
 const ContactCard: React.FC<ContactCardProps> = ({ contact, onEdit }) => {
@@ -28,7 +28,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onEdit }) => {
       {contact.phone && (
         <p className="text-sm text-customdarkgrey mt-2">{contact.phone}</p>
       )}
-      </div>
+    </div>
   )
 };
 
