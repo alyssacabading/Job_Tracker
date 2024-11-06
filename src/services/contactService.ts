@@ -6,6 +6,10 @@ export class ContactService {
         return await contact.save();
     }
 
+    async getContacts (): Promise<IContact[]> {
+        return await Contact.find();
+    }
+
     async getContactbyCompany (companyName: string): Promise<IContact[]> {
         return await Contact.find({
             company: companyName

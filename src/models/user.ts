@@ -18,7 +18,8 @@ const userSchema: Schema = new Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  skills: [{ type: Schema.Types.ObjectId, ref: 'Skill' }],
+  contacts: { type: [Schema.Types.ObjectId], ref: 'Contact', default: []},
+  skills: { type: [Schema.Types.ObjectId], ref: 'Skill', default: []},
 });
 
 userSchema.methods.addContact = async function (contactId: IContact['_id']): Promise<void> {

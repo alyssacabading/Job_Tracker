@@ -32,7 +32,7 @@ export class UserService {
         if (!user) throw new Error('User not found');
         if (!skill) throw new Error('Skill not found');
         
-        await user.addSkill(skill._id);
+        await user.addSkill(skillId);
         return user;
       }
 
@@ -41,6 +41,26 @@ export class UserService {
         if (!user) throw new Error('User not found');
 
         await user.removeSkill(skillId);
+        return user;
+    }
+
+    // Functions on User Contacts
+
+    async addContactToUser(userId: string, contactId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        const contact = await Contact.findById(contactId);
+        if (!user) throw new Error ('User not found');
+        if (!contact) throw new Error ('Contact not found');
+
+        await user.addContact(contactId);
+        return user;
+    }
+
+    async removeContactFromUser(userId: string, contactId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        if (!user) throw new Error('User not found');
+
+        await user.removeContact(contactId);
         return user;
     }
 }
