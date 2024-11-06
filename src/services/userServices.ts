@@ -1,5 +1,6 @@
 import User, { IUser } from '../models/user.js';
 import Skill from '../models/skill.js';
+import Contact, { IContact } from '../models/contact.js';
 
 export class UserService {
     async createUser (userData: IUser): Promise<IUser> {
@@ -23,7 +24,7 @@ export class UserService {
         return await User.findByIdAndDelete(userId);
     }
 
-    // Functions using User Skills
+    // Functions on User Skills
 
     async addSkillToUser(userId: string, skillId: string): Promise<IUser | null> {
         const user = await User.findById(userId);
@@ -31,7 +32,7 @@ export class UserService {
         if (!user) throw new Error('User not found');
         if (!skill) throw new Error('Skill not found');
         
-        await user.addSkill(skill._id);
+        await user.addSkill(skillId);
         return user;
       }
 
@@ -40,6 +41,26 @@ export class UserService {
         if (!user) throw new Error('User not found');
 
         await user.removeSkill(skillId);
+        return user;
+    }
+
+    // Functions on User Contacts
+
+    async addContactToUser(userId: string, contactId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        const contact = await Contact.findById(contactId);
+        if (!user) throw new Error ('User not found');
+        if (!contact) throw new Error ('Contact not found');
+
+        await user.addContact(contactId);
+        return user;
+    }
+
+    async removeContactFromUser(userId: string, contactId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        if (!user) throw new Error('User not found');
+
+        await user.removeContact(contactId);
         return user;
     }
 }

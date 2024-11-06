@@ -15,6 +15,16 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Get Contacts
+router.get('/', async (req, res) => {
+    try {
+        const contacts = await contactService.getContacts();
+        res.status(200).json(contacts)
+    } catch (err) {
+        res.send(500).json({ error: 'Error fetching contactcs', details: err })
+    }
+});
+
 // Get Contact by Company Name
 router.get('/:company', async (req, res) => {
     try {
