@@ -1,5 +1,6 @@
 import User, { IUser } from '../models/user.js';
 import Skill from '../models/skill.js';
+import Contact, { IContact } from '../models/contact.js';
 
 export class UserService {
     async createUser (userData: IUser): Promise<IUser> {
@@ -23,7 +24,7 @@ export class UserService {
         return await User.findByIdAndDelete(userId);
     }
 
-    // Functions using User Skills
+    // Functions on User Skills
 
     async addSkillToUser(userId: string, skillId: string): Promise<IUser | null> {
         const user = await User.findById(userId);

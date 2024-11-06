@@ -67,6 +67,8 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// Skill Routes
+
 router.post('/:id/skills', async (req, res) => {
     try {
         const userId = req.params.id;
@@ -88,5 +90,7 @@ router.delete('/:id/skills', async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 })
+
+
 
 export default router;
