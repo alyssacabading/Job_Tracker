@@ -1,17 +1,18 @@
 import { Router } from 'express';
 import { JobService } from '../services/jobServices.js';
+import { validateJobData } from '../middlewares/jobMiddleware.js';
 
 const jobService = new JobService();
 const router = Router();
 
 // create a new Job entity
-router.post('/', async (req, res) => {
+router.post('/', validateJobData(false), async (req, res) => {  // uses middleware to validate incoming job data
     try {
         const newJob = await jobService.createJob(req.body);
         res.status(201).json(newJob);
 
     } catch (error) {
-        res.status(500).json({ message: 'Error creating job', error });
+        res.status(500).json({ error: 'Error creating job', details: error.message});
     }
 });
 
@@ -27,7 +28,7 @@ router.get('/', async (req, res) => {
         res.status(200).json(jobs);
 
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching jobs', details: error });
+        res.status(500).json({ error: 'Error fetching jobs', details: error.message });
     }
 });
 
@@ -46,17 +47,40 @@ router.get('/:id', async (req, res) => {
 });
 
 // update a job by id
-router.put('/:id', async (req, res) => {
+// TODO: Refactor other methods to use this error handling with error codes
+router.put('/:id?', validateJobData(true), async (req, res) => {
     try {
         const jobId = req.params.id;
-        const updatedJob = await jobService.updateJob(jobId, req.body);
-        if (!updatedJob) {
-            return res.status(404).json({ error: 'Job not found' });
+        if (!jobId) {
+            return res.status(400).json({ error: 'Job ID is missing, none found in request' });
         }
+        const updatedJob = await jobService.updateJob(jobId, req.body);
         res.status(200).json(updatedJob);
-
     } catch (error) {
-        res.status(500).json({ error: 'Error updating job', details: error });
+        // error.message MUST match error message used in jobService's 'validateJobId' method
+        if (error.message === 'Invalid MongoDB ID formatting') {
+            return res.status(400).json({ error: error.message });
+        }
+
+        if (error.message === 'Job ID not found in Database') {
+            return res.status(404).json({ error: error.message });
+        }
+
+        res.status(500).json({ error: 'Error updating job', details: error.message });
+    }
+});
+
+// delete all jobs - should make protected, admin use only? - use JWTs?
+router.delete('/delete-all-jobs', async (req, res) => {
+    try {
+        const result = await jobService.deleteAllJobs();
+        if (result.deletedCount === 0) { // check if any jobs were deleted
+            return res.status(404).json({ error: 'No jobs found to delete' });
+        }
+
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting ALL jobs', details: error.message });
     }
 });
 
@@ -71,7 +95,7 @@ router.delete('/:id', async (req, res) => {
         res.status(204).send();
 
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting job', details: error });
+        res.status(500).json({ error: 'Error deleting job by id', details: error.message });
     }
 });
 
