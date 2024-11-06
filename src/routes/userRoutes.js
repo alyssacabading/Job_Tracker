@@ -67,4 +67,26 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+router.post('/:id/skills', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { skillId } = req.body; // skillId should be in request
+        const updatedUser = await userService.addSkillToUser(userId, skillId);
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+router.delete('/:id/skills', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { skillId } = req.body; // skillId should be in request
+        const updatedUser = await userService.removeSkillFromUser(userId, skillId);
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+})
+
 export default router;
