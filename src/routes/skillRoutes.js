@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
         res.status(201).json(newSkill);
 
     } catch (error) {
-        res.status(500).json({ message: 'Error creating skill', error });
+        res.status(500).json({ error: 'Error creating skill', details: error.message });
     }
 });
 
@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
         res.status(200).json(skills);
 
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching skills', details: error });
+        res.status(500).json({ error: 'Error fetching skills', details: error.message });
     }
 });
 
@@ -40,7 +40,7 @@ router.put('/:id', async (req, res) => {
         res.status(200).json(updatedSkill);
 
     } catch (error) {
-        res.status(500).json({ error: 'Error updating skill', details: error });
+        res.status(500).json({ error: 'Error updating skill', details: error.message });
     }
 });
 
@@ -55,7 +55,7 @@ router.delete('/:id', async (req, res) => {
         res.status(204).send();
 
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting skill', details: error });
+        res.status(500).json({ error: 'Error deleting skill', details: error.message });
     }
 });
 
