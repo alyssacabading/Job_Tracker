@@ -60,7 +60,6 @@ export class JobService {
     async updateJob(id: string, updateData: Partial<IJob>): Promise<IJob | null> {
         await this.validateJobId(id);
 
-        // converts Contacts string IDs to MongoDb ObjectID type for storage
         if (updateData.contacts) {
             updateData.contacts = updateData.contacts.map(contact => new Types.ObjectId(contact));
         }
@@ -72,24 +71,14 @@ export class JobService {
         return await Job.findByIdAndUpdate(id, updateData, { new: true }).populate('contacts');
     }
 
+
     async deleteJob(id: string): Promise<IJob | null> {
         await this.validateJobId(id);
         return await Job.findByIdAndDelete(id);
     }
 
-    // should be admin protected?
-    async deleteAllJobs(): Promise<{ deletedCount: number }> {
-        try {
-            const deletedAll = await Job.deleteMany({});
-            return { deletedCount: deletedAll.deletedCount }; // return # of deleted jobs
-        } catch (error) {
-            console.error('Error in deleteAllJobs service:', error);
-            throw new Error('Error while deleting all jobs: ' + error);
-        }
-    }
-
     // --------------------- 'Skills' related methods ------------------------------------------------
-    
+
     // Add a skillID to the job's skills array
     async addSkillToJob(jobId: string, skillId: string): Promise<IJob | null> {
 
@@ -114,21 +103,22 @@ export class JobService {
     }
 
 
-    //  ------------------ Helper function to validate job ID -----------------------------
+    // Helper function to validate job ID
     private async validateJobId(id: string): Promise<IJob> {
         if (!id) {
-            throw new Error('Job ID is missing, none found in request');
+            throw new Error('No Job ID is present');
         }
 
         if (!mongoose.isValidObjectId(id)) {
-            throw new Error('Invalid MongoDB ID formatting');
+            throw new Error('Invalid Job ID format');
         }
 
         const job = await Job.findById(id);
         if (!job) {
-            throw new Error('Job ID not found in Database');
+            throw new Error('Invalid Job ID - Job not found');
         }
         return job;
     }
+
 
 }
