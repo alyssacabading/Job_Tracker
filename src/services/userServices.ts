@@ -1,4 +1,6 @@
-import User, { IUser } from '../models/User.js';
+import User, { IUser } from '../models/user.js';
+import Skill from '../models/skill.js';
+import Contact from '../models/contact.js';
 
 export class UserService {
     async createUser (userData: IUser): Promise<IUser> {
