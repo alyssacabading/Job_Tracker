@@ -28,16 +28,15 @@ export class SkillService {
         // updates all Jobs with this skill ID, by removing it
         if (deletedSkill) {
             await Job.updateMany(
-                { skills: id }, // find jobs with this skill ID
-                { $pull: { skills: id } } // remove the ObjectId from the skills arr
+                { skills: id },             // find jobs with this skill ID
+                { $pull: { skills: id } }   // remove the ObjectId from the skills arr
             );
         }
         return deletedSkill;
     }
 
 
-    // Helper function to validate skill ID
-
+    //  ------------------ Helper function to validate Skill ID -----------------------------
     private async validateSkillId(id: string): Promise<ISkill> {
         if (!id) {
             throw new Error('No Skill ID is present');
