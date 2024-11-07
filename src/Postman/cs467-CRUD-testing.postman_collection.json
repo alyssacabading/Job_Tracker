@@ -126,60 +126,6 @@
 								}
 							},
 							"response": []
-						},
-						{
-							"name": "400 - Invalid Job - missing name field",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"salary\": {{salary2}}\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{app_url}}/api/jobs",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "400 - Invalid Job - empty name",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"companyName\": \"\",\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"salary\": {{salary2}}\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{app_url}}/api/jobs",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs"
-									]
-								}
-							},
-							"response": []
 						}
 					]
 				},
@@ -331,13 +277,13 @@
 					"name": "PUT",
 					"item": [
 						{
-							"name": "200 - Update salary 1",
+							"name": "Update salary 1",
 							"request": {
 								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"salary\": 55000\r\n}",
+									"raw": "{\r\n  \"salary\": 85000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -365,63 +311,7 @@
 							"response": []
 						},
 						{
-							"name": "400 - Incorrect JobType used",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"jobType\": \"part time\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{app_url}}/api/jobs/{{jobId1}}",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs",
-										"{{jobId1}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "400 - No ID found in request",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"companyName\": \"New Company\",\r\n    \"applicationStatus\": \"Interviewing\",\r\n    \"jobType\": \"Full-Time\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{app_url}}/api/jobs/",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "400 - Invalid MongoDB ID format",
+							"name": "Invalid id update",
 							"request": {
 								"method": "PUT",
 								"header": [],
@@ -447,28 +337,8 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "1",
-											"description": "Invalid MongoDB id format"
+											"value": "1"
 										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "404 - Nonexistant ID",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"url": {
-									"raw": "{{app_url}}/api/jobs/{{nonexistantJobId1}}",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs",
-										"{{nonexistantJobId1}}"
 									]
 								}
 							},
@@ -534,25 +404,6 @@
 							"request": {
 								"method": "DELETE",
 								"header": []
-							},
-							"response": []
-						},
-						{
-							"name": "DELETE ALL JOBS",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{app_url}}/api/jobs/delete-all-jobs",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs",
-										"delete-all-jobs"
-									]
-								}
 							},
 							"response": []
 						}
