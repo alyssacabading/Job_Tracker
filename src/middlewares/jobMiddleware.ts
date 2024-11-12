@@ -6,7 +6,15 @@ import { ApplicationStatus, JobType } from './jobEnum.js';
 
 class JobValidators{
 
-    // creates Zod schema used for validation incoming Job data, uses enum values for applicationStatus and jobType
+    // jobValidationSchema: creates Zod schema used for validation incoming Job data, uses enum values for applicationStatus and jobType
+    /*
+        companyName: required sring, min 1 char, max 100 chars
+        applicationStatus: required enum value from ApplicationStatus
+        jobType: required enum value from JobType
+        salary: optional number or null, min 0
+        contacts: optional array of valid ObjectIds
+        skills: optional array of valid ObjectIds
+    */
     private jobValidationSchema = z.object({
 
         companyName: z.string({
@@ -23,7 +31,8 @@ class JobValidators{
         }),
 
         salary: z.number()
-            .min(0, { message: 'Salary must be a positive number' }).optional(),
+            .min(0, { message: 'Salary must be a positive number' })
+            .nullable().optional(),
 
         contacts: z.array(z.string().refine((val) => mongoose.isValidObjectId(val), {
             message: 'Invalid ObjectId for contacts'})).optional(),
@@ -41,10 +50,10 @@ class JobValidators{
     }
 }
 
-// formats zod error messages into a more readable format
+// reformats zod error messages into a more readable format
 const formatZodError = (error: z.ZodError) => error.errors.map(err => ({ field: err.path.join('.'), message: err.message }));
 
-// init validator class
+
 const jobValidator = new JobValidators();
 
 // Middleware for validating job data, both partial and full requests
