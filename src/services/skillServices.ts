@@ -1,57 +1,63 @@
 import Skill, { ISkill } from '../models/skill.js';
 import Job from '../models/job.js';
-import mongoose from 'mongoose';
+import { validateId, EntityType } from '../utility/idValidation.js';
 
 export class SkillService {
     async createSkill(skillData: ISkill): Promise<ISkill> {
-        const newSkill = new Skill(skillData);
-        return await newSkill.save();
+         try {
+            const newSkill = new Skill(skillData);
+            return await newSkill.save();
+        } catch (error) {
+
+            // check if 'skillData.name' already exists in DB
+            if ((error as any).code === 11000) {
+                if (error instanceof Error) {
+                    error.message = `The skill "${skillData.name}" already exists in DB`;
+                }
+            }
+            throw error; 
+        }
     }
 
-    async getAllSkills(): Promise<ISkill[]> {
-        return await Skill.find();
+    async getAllSkills(skillFilter: any = {}): Promise<ISkill[]> {
+        const query: any = {};
+
+        // query by Skill name
+        if (skillFilter.name) {
+            query.name = { $regex: new RegExp(skillFilter.name, 'i') };
+        }
+        const skills = await Skill.find(query);
+        
+        // if no skills found, throw a 404 error
+        if (skills.length === 0) {
+            throw new Error('Skill not found in the database');
+        }
+        return skills;
+
+    }
+
+    async getSkillById(id: string): Promise<ISkill | null> {
+        await validateId(id, EntityType.Skill);
+        return await Skill.findById(id);
     }
 
     async updateSkill(id: string, skillData: Partial<ISkill>): Promise<ISkill | null> {
-        await this.validateSkillId(id);
+        await validateId(id, EntityType.Skill);
         return await Skill.findByIdAndUpdate(id, skillData, { new: true });
     }
 
     async deleteSkill(id: string): Promise<ISkill | null> {
+        await validateId(id, EntityType.Skill);
+        const deletedSkill = await Skill.findByIdAndDelete(id);  // delete skill by ID from DB
 
-        // validate skillID
-        await this.validateSkillId(id);
-
-        // delete Skill instance from DB
-        const deletedSkill = await Skill.findByIdAndDelete(id);
-
-        // updates all Jobs with this skill ID, by removing it
+        // Delete Cascade: updates all Jobs with this skill ID, remove Skill from Jobs.skills array
         if (deletedSkill) {
             await Job.updateMany(
-                { skills: id },             // find jobs with this skill ID
-                { $pull: { skills: id } }   // remove the ObjectId from the skills arr
+                { skills: id },
+                { $pull: { skills: id } }
             );
         }
         return deletedSkill;
-    }
-
-
-    //  ------------------ Helper function to validate Skill ID -----------------------------
-    private async validateSkillId(id: string): Promise<ISkill> {
-        if (!id) {
-            throw new Error('No Skill ID is present');
-        }
-
-        if (!mongoose.isValidObjectId(id)) {
-            throw new Error('Invalid Skill ID format');
-        }
-
-        const skill = await Skill.findById(id);
-        if (!skill) {
-            throw new Error('Invalid Skill ID - Skill not found');
-        }
-
-        return skill;
     }
 
 }
