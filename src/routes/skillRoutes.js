@@ -1,61 +1,73 @@
 import { Router } from 'express';
 import { SkillService } from '../services/skillServices.js';
+import { validateSkillData } from '../middlewares/skillMiddleware.js';
+import { customErrorHandler } from '../utility/errorHandler.js';
+
 
 const skillService = new SkillService();
 const router = Router();
 
-// create a new Skill entity
-router.post('/', async (req, res) => {
+// Create a new Skill entity - validates incoming skill data
+router.post('/', validateSkillData(), async (req, res) => {
     try {
         const newSkill = await skillService.createSkill(req.body);
         res.status(201).json(newSkill);
 
     } catch (error) {
-        res.status(500).json({ error: 'Error creating skill', details: error.message });
+        customErrorHandler(error, res);
     }
 });
 
-// get all skills
+// Get all Skills, optional query filter via query parameters
 router.get('/', async (req, res) => {
     try {
-        const skills = await skillService.getAllSkills();
-        if (!skills) {
-            return res.status(404).json({ error: 'Skills not found' });
-        }
-        res.status(200).json(skills);
+        const skillFilter = req.query;
+        const skills = await skillService.getAllSkills(skillFilter);
+        res.status(200).json(skills); 
 
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching skills', details: error.message });
+        // Skill name not found in the database, 404 error
+        if (error.message === 'Skill not found in the database') {
+            return res.status(404).json({ error: error.message });
+        }
+        customErrorHandler(error, res);
     }
 });
 
-// update a skill by ID
-router.put('/:id', async (req, res) => {
+
+// Get Skill by ID
+router.get('/:id', async (req, res) => {
+    try {
+        const skillId = req.params.id;
+        const skill = await skillService.getSkillById(skillId);
+        res.status(200).json(skill);
+
+    } catch (error) {
+        customErrorHandler(error, res);
+    }
+});
+
+// Update Skill by ID - validates incoming skill data
+router.put('/:id?', validateSkillData(), async (req, res) => {
     try {
         const skillId = req.params.id;
         const updatedSkill = await skillService.updateSkill(skillId, req.body);
-        if (!updatedSkill) {
-            return res.status(404).json({ error: 'Skill not found' });
-        }
         res.status(200).json(updatedSkill);
 
     } catch (error) {
-        res.status(500).json({ error: 'Error updating skill', details: error.message });
+        customErrorHandler(error, res);
     }
 });
 
-// delete a skill by ID
-router.delete('/:id', async (req, res) => {
+// Delete Skill by ID
+router.delete('/:id?', async (req, res) => {
     try {
         const skillId = req.params.id;
         const deletedSkill = await skillService.deleteSkill(skillId);
-        if (!deletedSkill) {
-            return res.status(404).json({ error: 'Skill not found' });
-        }
-        res.status(204).send();
+        res.status(204).json(deletedSkill);
 
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting skill', details: error.message });
+        customErrorHandler(error, res);
     }
 });
 
