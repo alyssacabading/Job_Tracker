@@ -1,6 +1,7 @@
 import User, { IUser } from '../models/user.js';
 import Skill from '../models/skill.js';
 import Contact from '../models/contact.js';
+import Job from '../models/job.js';
 
 export class UserService {
     async createUser (userData: IUser): Promise<IUser> {
@@ -61,6 +62,26 @@ export class UserService {
         if (!user) throw new Error('User not found');
 
         await user.removeContact(contactId);
+        return user;
+    }
+
+    // Functions on User Jobs
+
+    async addJobToUser(userId: string, jobId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        const job = await Job.findById(jobId);
+        if (!user) throw new Error ('User not found');
+        if (!job) throw new Error ('Job not found');
+
+        await user.addJob(jobId);
+        return user;
+    }
+
+    async removeJobFromUser(userId: string, jobId: string): Promise<IUser | null> {
+        const user = await User.findById(userId);
+        if (!user) throw new Error ('User not found');
+
+        await user.removeJob(jobId);
         return user;
     }
 }
