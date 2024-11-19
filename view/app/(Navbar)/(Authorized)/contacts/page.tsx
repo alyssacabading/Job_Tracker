@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ContactSearch from "./ContactSearch";
 import ContactCard from "./ContactCard";
 import AddContactModal from "./AddContactModal";
 import EditContactModal from "./EditContactModal";
 
 export interface IContact {
-  id: number;
+  _id: number;
   firstName: string;
   lastName: string;
   position: string;
@@ -16,47 +16,29 @@ export interface IContact {
   phone?: string;
 }
 
-const defaultContacts: IContact[] = [
-  {
-    id: 1,
-    firstName: "Andrew",
-    lastName: "Atef",
-    position: "Software Engineer",
-    company: "Notion",
-    email: "andrew.atef@notion.com",
-  },
-  {
-    id: 2,
-    firstName: "John",
-    lastName: "Doe",
-    position: "Software Engineer",
-    company: "Google",
-    email: "john.doe@google.com",
-  },
-  {
-    id: 3,
-    firstName: "Jane",
-    lastName: "Smith",
-    position: "Data Scientist",
-    company: "Facebook",
-    email: "jane.smith@meta.com",
-  },
-  {
-    id: 4,
-    firstName: "Mark",
-    lastName: "Johnson",
-    position: "Product Manager",
-    company: "Amazon",
-    email: "mark.johnson@amazon.com",
-  }
-];
-
 export default function Contacts() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [contacts, setContacts] = useState(defaultContacts);
+  const [contacts, setContacts] = useState<IContact[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedContact, setSelectContact] = useState<IContact | null>(null);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await fetch("/api/contacts");
+        if (!response.ok) {
+          throw new Error("Failed to fetch contacts");
+        }
+        const data = await response.json();
+        setContacts(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchContacts();
+  }, []);
 
   // Open the add modal
   const openModal = () => {
@@ -92,19 +74,31 @@ export default function Contacts() {
   const updateContact = (updatedContact: IContact) => {
     setContacts((prev) =>
       prev.map((contact) =>
-        contact.id === updatedContact.id ? updatedContact : contact
+        contact._id === updatedContact._id ? updatedContact : contact
       )
     );
   };
 
   // Delete an existing contact
   const deleteContact = (id: number) => {
-    setContacts((prev) => prev.filter((contact) => contact.id !== id));
+    setContacts((prev) => prev.filter((contact) => contact._id !== id));
   };
 
   // Handle search input
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    try {
+      const response = await fetch(`/api/contacts?company=${query}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch contacts");
+      }
+      const data = await response.json();
+      setContacts(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Filter contacts based on search query
@@ -134,7 +128,7 @@ export default function Contacts() {
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredContacts.map((contact) => (
           <ContactCard
-            key={contact.id}
+            key={contact._id}
             contact={contact}
             onEdit={openEditModal}
           />
