@@ -5,8 +5,7 @@ import { IContact } from "./page";
 import ContactForm from "./ContactForm";
 
 const AddContactModal = ({ isOpen, onClose, addContact }: { isOpen: boolean; onClose: () => void; addContact: (contact: IContact) => void }) => {
-  const [contactData, setContactData] = useState<IContact>({
-    id: Date.now(), // Generate a unique id
+  const [contactData, setContactData] = useState<Omit<IContact, '_id'>>({
     firstName: "",
     lastName: "",
     position: "",
@@ -20,10 +19,26 @@ const AddContactModal = ({ isOpen, onClose, addContact }: { isOpen: boolean; onC
     setContactData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(contactData);
-    addContact(contactData);
+    try {
+      const response = await fetch('/api/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add contact');
+      }
+
+      const newContact = await response.json();
+      addContact(newContact);
+    } catch (error) {
+      console.error(error);
+    }
     onClose();
   };
 

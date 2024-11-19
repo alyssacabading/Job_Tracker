@@ -9,7 +9,7 @@ interface ContactCardProps {
 
 const ContactCard: React.FC<ContactCardProps> = ({ contact, onEdit }) => {
   return (
-    <div key={contact.id} className="bg-white p-4 rounded-lg shadow-md">
+    <div key={contact._id} className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex justify-between mb-2">
         <h3 className="text-lg text-customdarkgrey font-bold">{contact.firstName} {contact.lastName}</h3>
         <FaEdit 
