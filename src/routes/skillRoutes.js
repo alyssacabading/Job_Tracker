@@ -12,6 +12,7 @@ router.post('/', validateSkillData(), async (req, res) => {
     try {
         const newSkill = await skillService.createSkill(req.body);
         res.status(201).json(newSkill);
+        console.log('Skill created successfully:', newSkill);
 
     } catch (error) {
         customErrorHandler(error, res);
@@ -23,7 +24,8 @@ router.get('/', async (req, res) => {
     try {
         const skillFilter = req.query;
         const skills = await skillService.getAllSkills(skillFilter);
-        res.status(200).json(skills); 
+        res.status(200).json(skills);
+        console.log('Skills fetched successfully:', skills);
 
     } catch (error) {
         // Skill name not found in the database, 404 error
@@ -41,6 +43,7 @@ router.get('/:id', async (req, res) => {
         const skillId = req.params.id;
         const skill = await skillService.getSkillById(skillId);
         res.status(200).json(skill);
+        console.log('Skill fetched successfully:', skill);
 
     } catch (error) {
         customErrorHandler(error, res);
@@ -53,6 +56,7 @@ router.put('/:id?', validateSkillData(), async (req, res) => {
         const skillId = req.params.id;
         const updatedSkill = await skillService.updateSkill(skillId, req.body);
         res.status(200).json(updatedSkill);
+        console.log('Skill updated successfully:', updatedSkill);
 
     } catch (error) {
         customErrorHandler(error, res);
@@ -65,6 +69,7 @@ router.delete('/:id?', async (req, res) => {
         const skillId = req.params.id;
         const deletedSkill = await skillService.deleteSkill(skillId);
         res.status(204).json(deletedSkill);
+        console.log('Skill deleted successfully:', deletedSkill);
 
     } catch (error) {
         customErrorHandler(error, res);

@@ -11,6 +11,7 @@ router.post('/', validateJobData(false), async (req, res) => {  // uses middlewa
     try {
         const newJob = await jobService.createJob(req.body);
         res.status(201).json(newJob);
+        console.log('Job created successfully:', newJob);
 
     } catch (error) {
         customErrorHandler(error, res);
@@ -23,6 +24,7 @@ router.get('/', async (req, res) => {
         const jobFilter = req.query;
         const jobs = await jobService.getAllJobs(jobFilter);
         res.status(200).json(jobs);
+        console.log('Jobs fetched successfully:', jobs);
 
     } catch (error) {
         customErrorHandler(error, res);
@@ -35,6 +37,7 @@ router.get('/:id', async (req, res) => {
         const jobId = req.params.id;
         const job = await jobService.getJobById(jobId);
         res.status(200).json(job);
+        console.log('Job fetched successfully:', job);
 
     } catch (error) {
         customErrorHandler(error, res);
@@ -47,6 +50,7 @@ router.put('/:id?', validateJobData(true), async (req, res) => {  // uses middle
         const jobId = req.params.id;
         const updatedJob = await jobService.updateJob(jobId, req.body);
         res.status(200).json(updatedJob);
+        console.log('Job updated successfully:', updatedJob);
 
     } catch (error) {
         customErrorHandler(error, res); 
@@ -87,6 +91,7 @@ router.post('/:jobId/skills', async (req, res) => {
         const { skillId } = req.body;
         const updatedJob = await jobService.addSkillToJob(jobId, skillId);
         res.status(200).json({ message: 'Skill added to job successfully', updatedJob });
+        console.log('Skill added to job successfully:', updatedJob);
     
     } catch (error) {
         customErrorHandler(error, res);
@@ -100,6 +105,7 @@ router.delete('/:jobId/skills', async (req, res) => {
         const { skillId } = req.body;
         const updatedJob = await jobService.removeSkillFromJob(jobId, skillId);
         res.status(200).json({ message: 'Skill removed from job successfully', updatedJob });
+        console.log('Skill removed from job successfully:', updatedJob);
 
     } catch (error) {
         customErrorHandler(error, res);
@@ -114,6 +120,7 @@ router.post('/:jobId/contacts', async (req, res) => {
         const { contactId } = req.body;
         const updatedJob = await jobService.addContactToJob(jobId, contactId);
         res.status(200).json({ message: 'Contact added to job successfully', updatedJob });
+        console.log('Contact added to job successfully:', updatedJob);
 
     } catch (error) {
         customErrorHandler(error, res);
