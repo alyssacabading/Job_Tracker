@@ -10,6 +10,7 @@ router.post('/', async (req, res) => {
         const userData = req.body;
         const newUser = await userService.createUser(userData);
         res.status(201).json(newUser);
+        console.log('User created successfully:', newUser);
     } catch (err) {
         res.status(500).json({ error: 'Error creating user.', details: err});
     };
@@ -20,6 +21,7 @@ router.get('/', async (req, res) => {
     try {
         const users = await userService.getAllUsers();
         res.status(200).json(users);
+        console.log('Users fetched successfully:', users);
     } catch (err) {
         res.status(500).json({ error: 'Error fetching users', details: err });
     }
@@ -33,6 +35,7 @@ router.get('/:id', async (req, res) => {
         if (!user) {
           return res.status(404).json({ error: 'User not found' });
         }
+        console.log('User fetched successfully:', user);
         res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ error: 'Error fetching user', details: err });
@@ -47,6 +50,7 @@ router.put('/:id', async (req, res) => {
         if (!user) {
           return res.status(404).json({ error: 'User not found' });
         }
+        console.log('User updated successfully:', user);
         res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ error: 'Error fetching user', details: err });
@@ -61,6 +65,7 @@ router.delete('/:id', async (req, res) => {
         if (!deletedUser) {
           return res.status(404).json({ error: 'User not found' });
         }
+        console.log('User deleted successfully:', userId);
         res.status(204).send();
     } catch (err) {
         res.status(500).json({ error: 'Error deleting user', details: err });
@@ -75,6 +80,7 @@ router.post('/:id/skills', async (req, res) => {
         const { skillId } = req.body; // skillId should be in request
         const updatedUser = await userService.addSkillToUser(userId, skillId);
         res.status(200).json(updatedUser);
+        console.log('Skill added to user successfully:', updatedUser);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -86,6 +92,7 @@ router.delete('/:id/skills', async (req, res) => {
         const { skillId } = req.body; // skillId should be in request
         const updatedUser = await userService.removeSkillFromUser(userId, skillId);
         res.status(200).json(updatedUser);
+        console.log('Skill removed from user successfully:', updatedUser);
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
@@ -99,6 +106,7 @@ router.post('/:id/contacts', async (req, res) => {
         const { contactId } = req.body;
         const updatedUser = await userService.addContactToUser(userId, contactId);
         res.status(200).json(updatedUser);
+        console.log('Contact added to user successfully:', updatedUser);
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
@@ -110,6 +118,7 @@ router.delete('/:id/contacts', async (req, res) => {
         const { contactId } = req.body;
         const updatedUser = await userService.removeContactFromUser(userId, contactId);
         res.status(200).json(updatedUser);
+        console.log('Contact removed from user successfully:', updatedUser);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -123,6 +132,7 @@ router.post('/:id/jobs', async (req, res) => {
         const { jobId } = req.body;
         const updatedUser = await userService.addJobToUser(userId, jobId);
         res.status(200).json(updatedUser);
+        console.log('Job added to user successfully:', updatedUser);
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
@@ -134,6 +144,7 @@ router.delete('/:id/jobs', async (req, res) => {
         const { jobId } = req.body;
         const updatedUser = await userService.removeJobFromUser(userId, jobId);
         res.status(200).json(updatedUser);
+        console.log('Job removed from user successfully:', updatedUser);
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
