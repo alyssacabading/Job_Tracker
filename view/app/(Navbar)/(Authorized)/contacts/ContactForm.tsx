@@ -91,10 +91,10 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
       {/* Add the phone number form field */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="phoneNumber" className="text-s font-bold mb-2">Phone Number</label>
+        <label htmlFor="phone" className="text-s font-bold mb-2">Phone Number</label>
         <input
           type="text"
-          name="phoneNumber"
+          name="phone"
           value={contactData.phone}
           onChange={handleChange}
           placeholder="Phone Number"

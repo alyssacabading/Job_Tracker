@@ -26,9 +26,26 @@ const EditContactModal = ({
     setContactData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateContact(contactData);
+    try {
+      const response = await fetch(`/api/contacts/${contactData._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update contact');
+      }
+
+      const updatedContact = await response.json();
+      updateContact(updatedContact);
+    } catch (error) {
+      console.error(error);
+    }
     onClose();
   };
 
@@ -42,8 +59,19 @@ const EditContactModal = ({
     setIsConfirmationModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    deleteContact(contactData.id);
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await fetch(`/api/contacts/${contactData._id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete contact');
+      }
+      deleteContact(contactData._id);
+    } catch (error) {
+      console.error(error);
+    }
     setIsConfirmationModalOpen(false);
     onClose();
   }
