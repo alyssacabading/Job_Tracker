@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 
 export interface Skills {
@@ -9,19 +9,134 @@ export interface Skills {
 }
 
 const defaultSkills: Skills[] = [
-  { id: 1, name: "React"},
-  { id: 2, name: "Node.js"},
-  { id: 3, name: "TypeScript"},
-  { id: 4, name: "GraphQL"}
+  { id: 1, name: "React" },
+  { id: 2, name: "Node.js" },
+  { id: 3, name: "TypeScript" },
+  { id: 4, name: "GraphQL" },
 ];
 
 export default function Skills() {
-  const [skills, setSkills] = useState(defaultSkills);
+  const [skills, setSkills] = useState<Skills[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newSkill, setNewSkill] = useState<string>("");
   const [tempSkills, setTempSkills] = useState<Skills[]>([]);
   const [skillsToRemove, setSkillsToRemove] = useState<Set<number>>(new Set());
 
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch("/api/skills");
+        if (response.ok) {
+          const data = await response.json();
+
+          // Map `_id` to `id` for frontend compatibility
+          const transformedData = data.map((skill: any) => ({
+            id: skill._id,
+            name: skill.name,
+          }));
+
+          setSkills(transformedData);
+        } else {
+          console.error("Failed to fetch skills:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
+  const handleSaveClick = async () => {
+    const updatedSkills = skills.filter(
+      (skill) => !skillsToRemove.has(skill.id)
+    );
+    const updatedTempSkills = tempSkills.filter(
+      (skill) => !skillsToRemove.has(skill.id)
+    );
+
+    // Identify the skills that need to be PUT (modified skills)
+    const modifiedSkillsToPut = skills.filter(
+      (skill) =>
+        !skillsToRemove.has(skill.id) &&
+        tempSkills.some(
+          (tempSkill) =>
+            tempSkill.id === skill.id && tempSkill.name !== skill.name
+        )
+    );
+
+    // POST new skills
+    const postNewSkills = async () => {
+      for (const skill of updatedTempSkills) {
+        try {
+          const response = await fetch("/api/skills", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: skill.name }),
+          });
+
+          if (response.ok) {
+            const createdSkill: Skills = await response.json();
+            updatedSkills.push(createdSkill);
+          } else {
+            console.error("Failed to POST new skill:", skill.name);
+          }
+        } catch (error) {
+          console.error("Error posting new skill:", error);
+        }
+      }
+    };
+
+    // PUT modified skills
+    const putModifiedSkills = async () => {
+      for (const skill of modifiedSkillsToPut) {
+        try {
+          const response = await fetch(`/api/skills/${skill.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: skill.name }),
+          });
+
+          if (!response.ok) {
+            console.error("Failed to PUT updated skill:", skill.name);
+          }
+        } catch (error) {
+          console.error("Error updating skill:", error);
+        }
+      }
+    };
+
+    // DELETE removed skills
+    const deleteRemovedSkills = async () => {
+      for (const skillId of Array.from(skillsToRemove)) {
+        try {
+          const response = await fetch(`/api/skills/${skillId}`, {
+            method: "DELETE",
+          });
+
+          if (!response.ok) {
+            console.error("Failed to DELETE skill with ID:", skillId);
+          }
+        } catch (error) {
+          console.error("Error deleting skill with ID:", skillId, error);
+        }
+      }
+    };
+
+    // Execute all API calls
+    await Promise.all([
+      deleteRemovedSkills(),
+      postNewSkills(),
+      putModifiedSkills(),
+    ]);
+
+    // Update local state after API calls
+    setSkills([...updatedSkills]);
+    setIsEditing(false);
+    setNewSkill("");
+    setTempSkills([]);
+    setSkillsToRemove(new Set());
+  };
   // Toggle edit mode
   const handleEditClick = () => {
     setIsEditing(!isEditing);
@@ -29,17 +144,6 @@ export default function Skills() {
 
   // Cancel editing
   const handleCancelClick = () => {
-    setIsEditing(false);
-    setNewSkill("");
-    setTempSkills([]);
-    setSkillsToRemove(new Set());
-  };
-
-  // Save changes
-  const handleSaveClick = () => {
-    const updatedSkills = skills.filter(skill => !skillsToRemove.has(skill.id));
-    const updatedTempSkills = tempSkills.filter(skill => !skillsToRemove.has(skill.id));
-    setSkills([...updatedSkills, ...updatedTempSkills]);
     setIsEditing(false);
     setNewSkill("");
     setTempSkills([]);
@@ -73,7 +177,7 @@ export default function Skills() {
 
   // Render skill pills
   const renderSkills = (skills: Skills[]) => {
-    return skills.map(skill => (
+    return skills.map((skill) => (
       <div
         key={skill.id}
         onClick={() => isEditing && handleSkillClick(skill.id)}
@@ -93,21 +197,20 @@ export default function Skills() {
       <div className="w-full bg-white rounded-lg shadow-md p-4 mb-8">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row justify-between gap-2">
-            <h2 className="text-customdarkgrey text-xl font-bold mb-2">Skills</h2>
+            <h2 className="text-customdarkgrey text-xl font-bold mb-2">
+              Skills
+            </h2>
             <button
               onClick={handleEditClick}
-              className="text-customblue hover:text-custombluehover">
-              <FaEdit
-                className="cursor-pointer text-customdarkgrey text-xl hover:text-black transition ease-in-out"
-              />
+              className="text-customblue hover:text-custombluehover"
+            >
+              <FaEdit className="cursor-pointer text-customdarkgrey text-xl hover:text-black transition ease-in-out" />
             </button>
           </div>
 
           {isEditing && (
             <div className="flex flex-col gap-2 mb-4">
-              <p
-                className="text-customdarkgrey font-bold text-md"
-              >
+              <p className="text-customdarkgrey font-bold text-md">
                 Click a skill if you want to remove that skill.
               </p>
               <input

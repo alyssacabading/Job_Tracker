@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { PiSuitcaseBold } from "react-icons/pi";
-import { Application } from "./page";
 import ConfirmationModal from "@/app/components/ConfirmationModal";
+import {
+  Application,
+  ApplicationFormData,
+  Skill,
+  Contact,
+} from "@/app/types/job";
 import ApplicationForm from "./ApplicationForm";
 
 const EditApplicationModal = ({
@@ -10,54 +15,58 @@ const EditApplicationModal = ({
   onClose,
   editApplication,
   deleteApplication,
-  application
+  application,
 }: {
   isOpen: boolean;
   onClose: () => void;
   editApplication: (application: Application) => void;
-  deleteApplication: (id: number) => void;
-  application: Application
+  deleteApplication: (id: string) => void;
+  application: Application;
 }) => {
-  const [applicationData, setApplicationData] = useState<Application>(application);
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState<boolean>(false);
+  const [applicationData, setApplicationData] = useState<ApplicationFormData>(
+    convertApplicationToFormData(application)
+  );
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (application) {
-      setApplicationData(application);
+      setApplicationData(convertApplicationToFormData(application));
     }
   }, [application]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setApplicationData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target;
+    setApplicationData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log("Editing application: ", applicationData);
-      editApplication(applicationData);
-      onClose();
+    e.preventDefault();
+    // Convert applicationData back to Application before editing
+    const updatedApplication = convertFormDataToApplication(applicationData);
+    editApplication(updatedApplication);
+    onClose();
   };
 
   const handleSave = () => {
     const event = new Event("submit", { bubbles: true, cancelable: true });
     const form = document.querySelector("form");
     form?.dispatchEvent(event);
-  }
+  };
 
   const handleDelete = () => {
     setIsConfirmationModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    deleteApplication(applicationData.id);
+    deleteApplication(applicationData._id);
     setIsConfirmationModalOpen(false);
     onClose();
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-        onClose();
+      onClose();
     }
   };
 
@@ -70,11 +79,14 @@ const EditApplicationModal = ({
     >
       <div className="bg-white p-6 rounded-lg w-[600px]">
         <div className="flex justify-between items-center mb-4">
-          <div className="flex align-baseline">
-            <PiSuitcaseBold className="text-3xl align-baseline mr-2 self-center"/>
+          <div className="flex items-baseline">
+            <PiSuitcaseBold className="text-3xl mr-2" />
             <h2 className="text-2xl font-bold">Edit Application</h2>
           </div>
-          <RiCloseLargeFill onClick={onClose} className="cursor-pointer leading-none text-xl text-customdarkgrey hover:text-black transition ease-in-out"/>
+          <RiCloseLargeFill
+            onClick={onClose}
+            className="cursor-pointer text-xl text-customdarkgrey hover:text-black transition ease-in-out"
+          />
         </div>
 
         <ApplicationForm
@@ -97,5 +109,64 @@ const EditApplicationModal = ({
     </div>
   );
 };
+
+// Function to convert Application to ApplicationFormData
+function convertApplicationToFormData(
+  application: Application
+): ApplicationFormData {
+  return {
+    _id: application._id || "",
+    companyName: application.companyName,
+    applicationStatus: application.applicationStatus,
+    jobType: application.jobType,
+    salary: application.salary,
+    contacts: application.contacts
+      ? application.contacts
+          .map((contact) => `${contact.firstName} ${contact.lastName}`)
+          .join(", ")
+      : "",
+    skills: application.skills
+      ? application.skills.map((skill) => skill.name).join(", ")
+      : "",
+  };
+}
+
+// Function to convert ApplicationFormData back to Application
+function convertFormDataToApplication(
+  formData: ApplicationFormData
+): Application {
+  // Process skills
+  const skillNames = formData.skills
+    .split(",")
+    .map((name) => name.trim())
+    .filter((name) => name !== "");
+  const skillsArray: Skill[] = skillNames.map((name) => ({ name }));
+
+  // Process contacts
+  const contactNames = formData.contacts
+    .split(",")
+    .map((name) => name.trim())
+    .filter((name) => name !== "");
+  const contactsArray: Contact[] = contactNames.map((fullName) => {
+    const [firstName, lastName] = fullName.split(" ");
+    return {
+      firstName: firstName || "Unknown",
+      lastName: lastName || "Unknown",
+      company: "Unknown",
+      position: "Unknown",
+      email: "unknown@example.com",
+    };
+  });
+
+  return {
+    _id: formData._id,
+    companyName: formData.companyName,
+    applicationStatus: formData.applicationStatus,
+    jobType: formData.jobType,
+    salary: formData.salary,
+    contacts: contactsArray,
+    skills: skillsArray,
+  };
+}
 
 export default EditApplicationModal;
