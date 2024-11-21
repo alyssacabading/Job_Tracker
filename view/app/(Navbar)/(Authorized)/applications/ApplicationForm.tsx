@@ -1,9 +1,11 @@
+// ApplicationForm.tsx
+
 import React from "react";
-import { Application } from "./page";
+import { ApplicationFormData } from "@/app/types/job"; // We'll define this interface
 import FormFooterButtons from "@/app/components/FormFooterButtons";
 
 interface ApplicationFormProps {
-  applicationData: Application;
+  applicationData: ApplicationFormData;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   handleSave: () => void;
@@ -17,89 +19,101 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
   handleSubmit,
   handleSave,
   handleDelete,
-  onClose
+  onClose,
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      {/* Add the title form field */}
+      {/* Job Title */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="title" className="text-s font-bold mb-2">Job Title*</label>
+        <label htmlFor="jobType" className="text-s font-bold mb-2">
+          Job Title*
+        </label>
         <input
           type="text"
-          name="title"
-          value={applicationData.title}
+          name="jobType"
+          value={applicationData.jobType}
           onChange={handleChange}
           placeholder="Job Title"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
         />
       </div>
 
-      {/* Add the company form field */}
+      {/* Company */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="company" className="text-s font-bold mb-2">Company*</label>
+        <label htmlFor="companyName" className="text-s font-bold mb-2">
+          Company*
+        </label>
         <input
           type="text"
-          name="company"
-          value={applicationData.company}
+          name="companyName"
+          value={applicationData.companyName}
           onChange={handleChange}
           placeholder="Company"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
         />
       </div>
 
-      {/* Add the application status form field */}
+      {/* Application Status */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="status" className="text-s font-bold mb-2">Application Status*</label>
+        <label htmlFor="applicationStatus" className="text-s font-bold mb-2">
+          Application Status*
+        </label>
         <input
           type="text"
-          name="status"
-          value={applicationData.status}
+          name="applicationStatus"
+          value={applicationData.applicationStatus}
           onChange={handleChange}
           placeholder="Application Status"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
         />
       </div>
 
-      {/* Add the skills form field */}
+      {/* Skills */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="skills" className="text-s font-bold mb-2">Skills</label>
+        <label htmlFor="skills" className="text-s font-bold mb-2">
+          Skills
+        </label>
         <input
           type="text"
           name="skills"
           value={applicationData.skills}
           onChange={handleChange}
-          placeholder="Skills"
+          placeholder="Skills (comma-separated)"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
         />
       </div>
 
-      {/* Add the salary form field */}
+      {/* Salary */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="salary" className="text-s font-bold mb-2">Salary</label>
+        <label htmlFor="salary" className="text-s font-bold mb-2">
+          Salary
+        </label>
         <input
           type="text"
           name="salary"
-          value={applicationData.salary}
+          value={applicationData.salary || ""}
           onChange={handleChange}
           placeholder="Salary"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
         />
       </div>
 
-      {/* Add the contacts form field */}
+      {/* Contacts */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="contacts" className="text-s font-bold mb-2">Relevant Contacts</label>
+        <label htmlFor="contacts" className="text-s font-bold mb-2">
+          Relevant Contacts
+        </label>
         <input
           type="text"
           name="contacts"
           value={applicationData.contacts}
           onChange={handleChange}
-          placeholder="Contact names"
+          placeholder="Contact names (comma-separated)"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
         />
       </div>
-      
-      {/* Add the cancel and add form buttons */}
+
+      {/* Form Footer Buttons */}
       <FormFooterButtons
         onDelete={handleDelete}
         onClose={onClose}
