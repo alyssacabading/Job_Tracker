@@ -533,20 +533,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{app_url}}/api/jobs/:id",
+									"raw": "{{app_url}}/api/jobs/{{jobId1}}",
 									"host": [
 										"{{app_url}}"
 									],
 									"path": [
 										"api",
 										"jobs",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "{{jobId1}}"
-										}
+										"{{jobId1}}"
 									]
 								}
 							},
@@ -567,20 +561,42 @@
 									}
 								},
 								"url": {
-									"raw": "{{app_url}}/api/jobs/:id",
+									"raw": "{{app_url}}/api/jobs/{{jobId2}}",
 									"host": [
 										"{{app_url}}"
 									],
 									"path": [
 										"api",
 										"jobs",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "{{jobId2}}"
+										"{{jobId2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "200 - Update applicationStatus",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"salary\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/jobs/{{jobId2}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"jobs",
+										"{{jobId2}}"
 									]
 								}
 							},
@@ -894,6 +910,35 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"contactId\": \"{{contactId1}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/jobs/{{jobId1}}/contacts",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"jobs",
+										"{{jobId1}}",
+										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add contactId2 to job 1",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"contactId\": \"{{contactId2}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1684,6 +1729,194 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Create Contact 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const respJSON = pm.response.json();\r",
+											"\r",
+											"// Save the job ID to the environment if it exists\r",
+											"if (respJSON && respJSON._id) {\r",
+											"    pm.environment.set(\"contactId2\", respJSON._id);\r",
+											"    console.log(\"Contact Id saved:\", respJSON._id);\r",
+											"} else {\r",
+											"    console.error(\"contact Id not found in the response:\", respJSON);\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"{{firstName2}}}}\",\r\n  \"lastName\": \"{{lastName2}}}\",\r\n  \"company\": \"{{company2}}}}\",\r\n  \"position\": \"{{position1}}\",\r\n  \"email\": \"{{email2}}}}\",\r\n  \"phone\": \"{{phone2}}}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Contact 3 - no phone",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const respJSON = pm.response.json();\r",
+											"\r",
+											"// Save the job ID to the environment if it exists\r",
+											"if (respJSON && respJSON._id) {\r",
+											"    pm.environment.set(\"contactId3\", respJSON._id);\r",
+											"    console.log(\"Contact Id saved:\", respJSON._id);\r",
+											"} else {\r",
+											"    console.error(\"contact Id not found in the response:\", respJSON);\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"Luke\",\r\n  \"lastName\": \"Skywalker\",\r\n  \"company\": \"Star Wars Co.\",\r\n  \"position\": \"Hiring Manager\",\r\n  \"email\": \"luke.skywalker@aol.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - Invalid Contact - short",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const respJSON = pm.response.json();\r",
+											"\r",
+											"// Save the job ID to the environment if it exists\r",
+											"if (respJSON && respJSON._id) {\r",
+											"    pm.environment.set(\"contactId2\", respJSON._id);\r",
+											"    console.log(\"Contact Id saved:\", respJSON._id);\r",
+											"} else {\r",
+											"    console.error(\"contact Id not found in the response:\", respJSON);\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"company\": \"\",\r\n  \"position\": \"\",\r\n  \"email\": \"luke.skywalkeraol\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - Invalid Contact - long",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const respJSON = pm.response.json();\r",
+											"\r",
+											"// Save the job ID to the environment if it exists\r",
+											"if (respJSON && respJSON._id) {\r",
+											"    pm.environment.set(\"contactId2\", respJSON._id);\r",
+											"    console.log(\"Contact Id saved:\", respJSON._id);\r",
+											"} else {\r",
+											"    console.error(\"contact Id not found in the response:\", respJSON);\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"{{veryLongStr}}\",\r\n  \"lastName\": \"{{veryLongStr}}\",\r\n  \"company\": \"{{veryLongStr}}\",\r\n  \"position\": \"{{veryLongStr}}\",\r\n  \"email\": \"luke.skywalker@yahoo.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1703,6 +1936,351 @@
 									"path": [
 										"api",
 										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Contact by Name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{company2}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{company2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "404- Invalid Name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{app_url}}/api/contacts/:company",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										":company"
+									],
+									"variable": [
+										{
+											"key": "company",
+											"value": "Doesn'tExist"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PUT",
+					"item": [
+						{
+							"name": "200 - Update Contact 1 company",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"company\": \"Navistar\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{contactId1}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{contactId1}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "200 - Update Contact 1 name",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\": \"Stan\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{contactId1}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{contactId1}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - Validation check - short",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"company\": \"\",\r\n  \"position\": \"\",\r\n  \"email\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{contactId1}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{contactId1}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - Validation check - long",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"{{veryLongStr}}\",\r\n  \"lastName\": \"{{veryLongStr}}\",\r\n  \"company\": \"{{veryLongStr}}\",\r\n  \"position\": \"{{veryLongStr}}\",\r\n  \"email\": \"{{veryLongStr}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{contactId1}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{contactId1}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - No ID found in URL",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"Stan\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts/",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - Invalid MongoDB ID",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"Stan\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{invalidDBID}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{invalidDBID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "404- Nonexistant ID",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"Stan\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{nonexistantDBID}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{nonexistantDBID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "204 - Delete Contact by Id #1",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{contactId1}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{contactId1}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "204 - Delete Contact by Id #2",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{contactId2}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{contactId2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - No ID found in URL",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{app_url}}/api/contacts/",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "400 - Invalid MongoDB ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{invalidDBID}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{invalidDBID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "404- Nonexistant ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{app_url}}/api/contacts/{{nonexistantDBID}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"contacts",
+										"{{nonexistantDBID}}"
 									]
 								}
 							},
