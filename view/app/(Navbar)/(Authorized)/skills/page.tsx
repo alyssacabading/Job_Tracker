@@ -1,5 +1,6 @@
 "use client";
 
+import router from "next/router";
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 
@@ -22,28 +23,28 @@ export default function Skills() {
   const [tempSkills, setTempSkills] = useState<Skills[]>([]);
   const [skillsToRemove, setSkillsToRemove] = useState<Set<number>>(new Set());
 
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const response = await fetch("/api/skills");
-        if (response.ok) {
-          const data = await response.json();
+  const fetchSkills = async () => {
+    try {
+      const response = await fetch("/api/skills");
+      if (response.ok) {
+        const data = await response.json();
 
-          // Map `_id` to `id` for frontend compatibility
-          const transformedData = data.map((skill: any) => ({
-            id: skill._id,
-            name: skill.name,
-          }));
+        // Map `_id` to `id` for frontend compatibility
+        const transformedData = data.map((skill: any) => ({
+          id: skill._id,
+          name: skill.name,
+        }));
 
-          setSkills(transformedData);
-        } else {
-          console.error("Failed to fetch skills:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching skills:", error);
+        setSkills(transformedData);
+      } else {
+        console.error("Failed to fetch skills:", response.statusText);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching skills:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchSkills();
   }, []);
 
@@ -130,12 +131,11 @@ export default function Skills() {
       putModifiedSkills(),
     ]);
 
-    // Update local state after API calls
-    setSkills([...updatedSkills]);
     setIsEditing(false);
     setNewSkill("");
     setTempSkills([]);
     setSkillsToRemove(new Set());
+    await fetchSkills();
   };
   // Toggle edit mode
   const handleEditClick = () => {
