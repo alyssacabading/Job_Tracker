@@ -36,10 +36,11 @@ export async function DELETE(
   const { param: id } = params;
 
   try {
+    console.log(request);
     const response = await fetch(`${EXPRESS_BASE_URL}/${id}`, {
       method: "DELETE",
     });
-
+    console.log(response);
     if (response.status !== 204) {
       // For non-204 responses, safely parse JSON and return it
       const errorData = await response.json();
