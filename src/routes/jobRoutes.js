@@ -7,7 +7,7 @@ const jobService = new JobService();
 const router = Router();
 
 // Create a new Job entity. validateJobData = False, all input fields required
-router.post("/", validateJobData(false), async (req, res) => {
+router.post("/",  validateJobData(false), async (req, res) => {
   // uses middleware to validate incoming job data
   try {
     const newJob = await jobService.createJob(req.body);

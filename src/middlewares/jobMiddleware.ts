@@ -45,8 +45,8 @@ class JobValidators {
 
     skills: z
       .array(
-        z.string().refine((val) => mongoose.isValidObjectId(val), {
-          message: "Invalid ObjectId for skills",
+        z.string().refine((val) => mongoose.isValidObjectId(val) || typeof val === "string", {
+          message: "skill must be a string OR a valid ObjectId",
         })
       )
       .optional(),

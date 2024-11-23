@@ -1,6 +1,6 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Schema, Document, Types, Model } from 'mongoose';
 import { IContact } from './contact';
-import { ISkill } from './skill';
+import Skill, { ISkill } from './skill';
 
 export interface IJob extends Document {
     companyName: string;

@@ -1,15 +1,31 @@
 import Job, { IJob } from '../models/job.js';
 import { Types } from 'mongoose';
 import { validateId, EntityType } from '../utility/idValidation.js';
+import Skill from '../models/skill.js';
+import { SkillService } from './skillServices.js';
+
+const newService = new SkillService();
 
 export class JobService {
-    async createJob(jobData: IJob): Promise<IJob> {
 
+
+    async createJob(jobData: IJob): Promise<IJob> {
         // set 'salary' to null if not provided
         if (jobData.salary === undefined) {
             jobData.salary = null;
         }
-        const job = new Job(jobData);
+        const { skills = [], ...rest } = jobData;
+        const job = new Job(rest);
+
+        // loop over skills.skillName and add them to Skills DB if they don't exist
+        for (const skillName of skills) {
+            let existingSkill = await Skill.findOne({ name: skillName });
+            if (!existingSkill) {
+                existingSkill = await Skill.create({ name: skillName });
+            }
+            await job.addSkill(existingSkill._id); // Use the addSkill method
+        }
+
         return await job.save();
     }
 
@@ -51,8 +67,25 @@ export class JobService {
     }
 
     async updateJob(jobId: string, updateData: Partial<IJob>): Promise<IJob | null> {
-        await validateId(jobId, EntityType.Job);  
-        return await Job.findByIdAndUpdate(jobId, updateData, { new: true });
+        const { skills = [], ...rest } = updateData;  // extract current skills from updateData
+        await validateId(jobId, EntityType.Job);
+        const job = await Job.findById(jobId).populate('skills');
+        if (!job) {
+            throw new Error(`Job with ID ${jobId} not found`);
+        }
+
+        // loop thru Skills.SkillName and add them to Skills DB if they don't exist
+        for (const skillName of skills) {
+            let existingSkill = await Skill.findOne({ name: skillName });
+            if (!existingSkill) {
+                existingSkill = await Skill.create({ name: skillName });
+            }
+            await job.addSkill(existingSkill._id); // add new Skill to Skills DB
+        }
+
+        // save updates to Job
+        Object.assign(job, rest);
+        return await job.save();
     }
 
     async deleteJob(jobId: string): Promise<IJob | null> {
