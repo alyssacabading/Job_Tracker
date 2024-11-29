@@ -55,7 +55,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"companyName\": \"{{companyName1}}\",\n  \"applicationStatus\": \"{{appStatus1}}\",\n  \"jobType\": \"{{jobType1}}\",\n  \"salary\": {{salary1}}\n}",
+									"raw": "{\n  \"companyName\": \"{{companyName1}}\",\n  \"applicationStatus\": \"{{appStatus1}}\",\n  \"jobType\": \"{{jobType1}}\",\n  \"jobTitle\": \"{{jobTitle1}}\",\n  \"skills\": [\"HTML\", \"CSS\"]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -107,7 +107,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"companyName\": \"{{companyName2}}\",\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"salary\": {{salary2}}\r\n}",
+									"raw": "{\r\n  \"companyName\": \"{{companyName2}}\",\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"salary\": {{salary2}},\r\n  \"skills\": [\"Javascript\", \"Google Cloud\"]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -128,7 +128,7 @@
 							"response": []
 						},
 						{
-							"name": "201 - Create Job 3 - no salary",
+							"name": "201 - Create Job 3",
 							"event": [
 								{
 									"listen": "test",
@@ -158,7 +158,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"companyName\": \"Best Company Ever\",\r\n  \"applicationStatus\": \"Offer Pending\",\r\n  \"jobType\": \"Contracted\"\r\n}",
+									"raw": "{\r\n  \"companyName\": \"Company Incorporated\",\r\n  \"applicationStatus\": \"Interviewing\",\r\n  \"jobType\": \"Temporary\",\r\n  \"jobTitle\": \"Software Engineer\",\r\n  \"skills\": [\"HTML\", \"CSS\", \"Python\"]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -179,7 +179,7 @@
 							"response": []
 						},
 						{
-							"name": "400 - Invalid Job - enums failed",
+							"name": "400 - Invalid Job - enums + jobTitle fail",
 							"event": [
 								{
 									"listen": "test",
@@ -209,7 +209,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"companyName\": \"Worst Company Every\",\r\n  \"applicationStatus\": \"{{invalidAppStatus}}\",\r\n  \"jobType\": \"{{invalidJobType}}\",\r\n  \"salary\": {{salary2}}\r\n}",
+									"raw": "{\r\n  \"companyName\": \"Worst Company Every\",\r\n  \"applicationStatus\": \"{{invalidAppStatus}}\",\r\n  \"jobType\": \"{{invalidJobType}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -236,7 +236,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"salary\": {{salary2}}\r\n}",
+									"raw": "{\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"jobTitle\": \"{{jobTitle1}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -263,7 +263,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"companyName\": \"\",\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"salary\": {{salary2}}\r\n}",
+									"raw": "{\r\n  \"companyName\": \"\",\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"jobTitle\": \"{{jobTitle2}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -428,12 +428,12 @@
 							"response": []
 						},
 						{
-							"name": "Query salary min max",
+							"name": "Query jobTitle by name",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{app_url}}/api/jobs?salary={\"$gt\":{{minSalary1}}, \"$lte\": {{maxSalary1}}}",
+									"raw": "{{app_url}}/api/jobs?jobTitle=Cloud",
 									"host": [
 										"{{app_url}}"
 									],
@@ -443,8 +443,8 @@
 									],
 									"query": [
 										{
-											"key": "salary",
-											"value": "{\"$gt\":{{minSalary1}}, \"$lte\": {{maxSalary1}}}"
+											"key": "jobTitle",
+											"value": "Cloud"
 										}
 									]
 								}
@@ -519,41 +519,13 @@
 					"name": "PUT",
 					"item": [
 						{
-							"name": "200 - Update salary 1",
+							"name": "200 - Update jobTitle",
 							"request": {
 								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"salary\": 55000\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{app_url}}/api/jobs/{{jobId1}}",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs",
-										"{{jobId1}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "200 - Update salary 2 - null",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"salary\": null\r\n}",
+									"raw": "{\r\n  \"jobTitle\": \"IT Manager\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -582,6 +554,34 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"salary\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{app_url}}/api/jobs/{{jobId2}}",
+									"host": [
+										"{{app_url}}"
+									],
+									"path": [
+										"api",
+										"jobs",
+										"{{jobId2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "200 - Update applicationStatus Copy",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"skills\": [\"HTML\", \"CSS\", \"Google Cloud\", \"AWS\"]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
