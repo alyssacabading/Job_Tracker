@@ -8,12 +8,7 @@ const newService = new SkillService();
 
 export class JobService {
 
-
     async createJob(jobData: IJob): Promise<IJob> {
-        // set 'salary' to null if not provided
-        if (jobData.salary === undefined) {
-            jobData.salary = null;
-        }
         const { skills = [], ...rest } = jobData;
         const job = new Job(rest);
 
@@ -42,10 +37,10 @@ export class JobService {
         if (jobFilters.jobType) {
             query.jobType = jobFilters.jobType;
         }
-        if (jobFilters.salary) {
-            const salaryFilter = JSON.parse(jobFilters.salary);
-            query.salary = salaryFilter;
+        if (jobFilters.jobTitle) {
+            query.jobTitle = { $regex: new RegExp(jobFilters.jobTitle, 'i') }; 
         }
+ 
         // converts param string ids into ObjectIds, then creates a query for DB
         if (jobFilters.skills) {
             const skillIds = jobFilters.skills.split(',').map((id: string) => new Types.ObjectId(id));

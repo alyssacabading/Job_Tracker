@@ -6,7 +6,7 @@ export interface IJob extends Document {
     companyName: string;
     applicationStatus: string;
     jobType: string;
-    salary?: number | null;
+    jobTitle: string;
     contacts?: IContact['_id'][];
     skills?: ISkill['_id'][];
     addContact(contactId: IContact['_id']): Promise<void>;
@@ -19,7 +19,7 @@ const jobSchema: Schema = new Schema({
     companyName: { type: String, required: true },
     applicationStatus: { type: String, required: true },
     jobType: { type: String, required: true },
-    salary: { type: Number, required: false },
+    jobTitle: { type: String, required: true },
     contacts: [{ type: Schema.Types.ObjectId, ref: 'Contact', required: false }],
     skills: [{ type: Schema.Types.ObjectId, ref: 'Skill', required: false }]
 });

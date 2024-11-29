@@ -9,7 +9,7 @@ class JobValidators {
         companyName: required sring, min 1 char, max 100 chars
         applicationStatus: required enum value from ApplicationStatus
         jobType: required enum value from JobType
-        salary: optional number or null, min 0
+        jobTitle: required sring, min 1 char, max 50 chars
         contacts: optional array of valid ObjectIds
         skills: optional array of valid ObjectIds
     */
@@ -19,7 +19,7 @@ class JobValidators {
         required_error: "Company name field is required",
       })
       .min(1, { message: "Company name cannot be empty" })
-      .max(100, { message: "Company name less than 100 characters" }),
+      .max(100, { message: "Company name must be less than 100 characters" }),
 
     applicationStatus: z.nativeEnum(ApplicationStatus, {
       required_error: "Application status is required",
@@ -29,11 +29,12 @@ class JobValidators {
       required_error: "Job type is required",
     }),
 
-    salary: z
-      .number()
-      .min(0, { message: "Salary must be a positive number" })
-      .nullable()
-      .optional(),
+    jobTitle: z
+    .string({
+      required_error: "Job Title field is required",
+    })
+    .min(1, { message: "Job Title cannot be empty" })
+    .max(50, { message: "Job Title must be less than 50 characters" }),
 
     contacts: z
       .array(
