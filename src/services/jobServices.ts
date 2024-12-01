@@ -74,27 +74,46 @@ export class JobService {
     if (!job) {
       throw new Error(`Job with ID ${jobId} not found`);
     }
+    
+    // Update skills if provided
+    if (skills.length > 0) {
+      // get existing skills & ids
+      const existingSkills = job.skills as ISkill[] || [];
+      const existingSkillIds = existingSkills.map((skill) => (skill._id as Types.ObjectId).toString());
 
-    // check if job had any already existing skills, if so get the IDs
-    let existingSkillIds: string[] = [];
-    if (job.skills) {
-      existingSkillIds = (job.skills as ISkill[]).map((skill: ISkill) => {
-        const skillId = skill._id as Types.ObjectId;
-        return skillId.toString();
-    });
-}
+      // loop over skill names and add them to Skills DB if they don't exist
+      const newSkills = [];
+      for (const skillName of skills) {
+          let skill = await Skill.findOne({ name: skillName });
+          if (!skill) {
+              skill = await Skill.create({ name: skillName });
+          }
+          newSkills.push(skill);
+      }
 
-    // loop thru 'skills' from input, add them to Skills DB if they don't exist, skipping existingSkillIds
-    for (const skillName of skills) {
-      let existingSkill = await Skill.findOne({ name: skillName });
-      if (!existingSkill) {
-        existingSkill = await Skill.create({ name: skillName });
+      // get new skill ids, 
+      const newSkillIds = newSkills.map((skill) => (skill._id as Types.ObjectId).toString());
+
+      // remove skill ids that are not in newSkills
+      for (const existingSkill of existingSkills) {
+          const skillId = (existingSkill._id as Types.ObjectId).toString();
+          if (!newSkillIds.includes(skillId)) {
+              await job.removeSkill(existingSkill._id);
+          }
       }
-      if (!existingSkillIds.includes((existingSkill._id as Types.ObjectId).toString())) {
-          await job.addSkill(existingSkill._id); // add new skill if not already present
+
+      // add new skills that are not in existingSkills
+      for (const newSkill of newSkills) {
+          const skillId = (newSkill._id as Types.ObjectId).toString();
+          if (!existingSkillIds.includes(skillId)) {
+              await job.addSkill(newSkill._id);
+          }
       }
+
+      // remove old skills from Skills DB which were replaced
+      await this.removeOldSkills();
     }
-
+    
     // save updates to Job
     Object.assign(job, rest);
     await job.save();
@@ -106,13 +125,27 @@ export class JobService {
 
   async deleteJob(jobId: string): Promise<IJob | null> {
     await validateId(jobId, EntityType.Job);
-    return await Job.findByIdAndDelete(jobId);
+    const deletedJob = await Job.findByIdAndDelete(jobId);
+    await this.removeOldSkills();
+    return deletedJob;
   }
 
   // should be admin protected?
   async deleteAllJobs(): Promise<{ deletedCount: number }> {
     const result = await Job.deleteMany({});
+    await this.removeOldSkills();
     return { deletedCount: result.deletedCount || 0 };
+  }
+
+  // removes skills that are not associated with any job
+  private async removeOldSkills(): Promise<void> {
+    const allSkills = await Skill.find();
+    for (const skill of allSkills) {
+        const isSkillUsed = await Job.exists({ skills: skill._id });  // check if skill is used in another job
+        if (!isSkillUsed) {
+            await Skill.findByIdAndDelete(skill._id);
+        }
+    }
   }
 
   // Functions on Job Skills
