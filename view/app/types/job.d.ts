@@ -12,7 +12,7 @@ export interface ApplicationFormData {
   companyName: string;
   applicationStatus: string;
   jobType: string;
-  salary?: number | null;
+  jobTitle: string;
   contacts: string;
   skills: string;
 }
@@ -22,9 +22,9 @@ export interface Application {
   companyName: string;
   applicationStatus: string;
   jobType: string;
-  salary?: number | null;
+  jobTitle: string;
   contacts?: Contact[];
-  skills?: Skill[];
+  skills?: string[];
 }
 
 export interface Contact {

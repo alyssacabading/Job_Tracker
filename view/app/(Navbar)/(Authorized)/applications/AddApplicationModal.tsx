@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { PiSuitcaseBold } from "react-icons/pi";
 import ApplicationForm from "./ApplicationForm";
-import {
-  Application,
-  ApplicationFormData,
-  Skill,
-  Contact,
-} from "@/app/types/job";
+import { Application, ApplicationFormData, Contact } from "@/app/types/job";
 
 const AddApplicationModal = ({
   isOpen,
@@ -25,7 +20,7 @@ const AddApplicationModal = ({
     companyName: "",
     applicationStatus: "",
     jobType: "",
-    salary: null,
+    jobTitle: "",
     contacts: "",
     skills: "",
   });
@@ -45,11 +40,8 @@ const AddApplicationModal = ({
 
     // Process skills input
     const skillNames = applicationData.skills
-      .split(",")
-      .map((name) => name.trim())
-      .filter((name) => name !== "");
-    const skillsArray: Skill[] = skillNames.map((name) => ({ name }));
-
+      ? applicationData.skills.split(",")
+      : [];
     // Process contacts input
     const contactNames = applicationData.contacts
       .split(",")
@@ -72,8 +64,8 @@ const AddApplicationModal = ({
       companyName: applicationData.companyName,
       applicationStatus: applicationData.applicationStatus,
       jobType: applicationData.jobType,
-      salary: applicationData.salary,
-      skills: skillsArray,
+      jobTitle: applicationData.jobTitle,
+      skills: skillNames,
       contacts: contactsArray,
     };
 
@@ -117,6 +109,7 @@ const AddApplicationModal = ({
         <ApplicationForm
           applicationData={applicationData}
           handleChange={handleChange}
+          handleSelectChange={handleChange}
           handleSubmit={handleSubmit}
           handleSave={handleSave}
           onClose={onClose}

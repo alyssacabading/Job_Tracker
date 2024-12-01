@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { PiSuitcaseBold } from "react-icons/pi";
 import ConfirmationModal from "@/app/components/ConfirmationModal";
-import {
-  Application,
-  ApplicationFormData,
-  Skill,
-  Contact,
-} from "@/app/types/job";
+import { Application, ApplicationFormData, Contact } from "@/app/types/job";
 import ApplicationForm from "./ApplicationForm";
 
 const EditApplicationModal = ({
@@ -35,7 +30,9 @@ const EditApplicationModal = ({
     }
   }, [application]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setApplicationData((prev) => ({ ...prev, [name]: value }));
   };
@@ -92,6 +89,7 @@ const EditApplicationModal = ({
         <ApplicationForm
           applicationData={applicationData}
           handleChange={handleChange}
+          handleSelectChange={handleChange}
           handleSubmit={handleSubmit}
           handleSave={handleSave}
           handleDelete={handleDelete}
@@ -119,15 +117,13 @@ function convertApplicationToFormData(
     companyName: application.companyName,
     applicationStatus: application.applicationStatus,
     jobType: application.jobType,
-    salary: application.salary,
+    jobTitle: application.jobTitle,
     contacts: application.contacts
       ? application.contacts
           .map((contact) => `${contact.firstName} ${contact.lastName}`)
           .join(", ")
       : "",
-    skills: application.skills
-      ? application.skills.map((skill) => skill.name).join(", ")
-      : "",
+    skills: application.skills ? application.skills.join(",") : "",
   };
 }
 
@@ -136,11 +132,7 @@ function convertFormDataToApplication(
   formData: ApplicationFormData
 ): Application {
   // Process skills
-  const skillNames = formData.skills
-    .split(",")
-    .map((name) => name.trim())
-    .filter((name) => name !== "");
-  const skillsArray: Skill[] = skillNames.map((name) => ({ name }));
+  const skillNames = formData.skills.split(",");
 
   // Process contacts
   const contactNames = formData.contacts
@@ -163,9 +155,9 @@ function convertFormDataToApplication(
     companyName: formData.companyName,
     applicationStatus: formData.applicationStatus,
     jobType: formData.jobType,
-    salary: formData.salary,
+    jobTitle: formData.jobTitle,
     contacts: contactsArray,
-    skills: skillsArray,
+    skills: formData.skills ? formData.skills.split(",") : [],
   };
 }
 

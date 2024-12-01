@@ -4,9 +4,29 @@ import React from "react";
 import { ApplicationFormData } from "@/app/types/job"; // We'll define this interface
 import FormFooterButtons from "@/app/components/FormFooterButtons";
 
+export enum ApplicationStatus {
+  Rejected = "Rejected",
+  Applied = "Applied",
+  Interviewing = "Interviewing",
+  OfferPending = "Offer Pending",
+  Accepted = "Accepted",
+}
+
+export enum JobType {
+  FullTime = "Full-Time",
+  PartTime = "Part-Time",
+  Internship = "Internship",
+  Contracted = "Contracted",
+  Temporary = "Temporary",
+  Freelance = "Freelance",
+}
+
 interface ApplicationFormProps {
   applicationData: ApplicationFormData;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+  handleSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   handleSave: () => void;
   handleDelete?: () => void; // Optional, only present in EditApplicationModal
@@ -16,6 +36,7 @@ interface ApplicationFormProps {
 const ApplicationForm: React.FC<ApplicationFormProps> = ({
   applicationData,
   handleChange,
+  handleSelectChange,
   handleSubmit,
   handleSave,
   handleDelete,
@@ -25,13 +46,13 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
     <form onSubmit={handleSubmit}>
       {/* Job Title */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="jobType" className="text-s font-bold mb-2">
+        <label htmlFor="JobTitle" className="text-s font-bold mb-2">
           Job Title*
         </label>
         <input
           type="text"
-          name="jobType"
-          value={applicationData.jobType}
+          name="jobTitle"
+          value={applicationData.jobTitle}
           onChange={handleChange}
           placeholder="Job Title"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
@@ -58,14 +79,18 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
         <label htmlFor="applicationStatus" className="text-s font-bold mb-2">
           Application Status*
         </label>
-        <input
-          type="text"
+        <select
           name="applicationStatus"
-          value={applicationData.applicationStatus}
-          onChange={handleChange}
-          placeholder="Application Status"
-          className="mb-4 p-2 border rounded w-full placeholder-italic"
-        />
+          value={applicationData.applicationStatus || ApplicationStatus.Applied}
+          onChange={handleSelectChange}
+          className="mb-4 p-2 border rounded w-full"
+        >
+          {Object.values(ApplicationStatus).map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Skills */}
@@ -83,19 +108,23 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
         />
       </div>
 
-      {/* Salary */}
+      {/* Job Type */}
       <div className="flex flex-col mb-2">
-        <label htmlFor="salary" className="text-s font-bold mb-2">
-          Salary
+        <label htmlFor="jobType" className="text-s font-bold mb-2">
+          Job Type
         </label>
-        <input
-          type="text"
-          name="salary"
-          value={applicationData.salary || ""}
+        <select
+          name="jobType"
+          value={applicationData.jobType || JobType.FullTime}
           onChange={handleChange}
-          placeholder="Salary"
-          className="mb-4 p-2 border rounded w-full placeholder-italic"
-        />
+          className="mb-4 p-2 border rounded w-full"
+        >
+          {Object.values(JobType).map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Contacts */}

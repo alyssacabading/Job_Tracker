@@ -70,8 +70,14 @@ export default function Applications() {
           );
         }
         const data = await response.json();
+
+        const transformedData = data.map((application: any) => ({
+          ...application,
+          skills: application.skills?.map((skill: any) => skill.name) || [],
+        }));
+
         console.log(data);
-        setApps(data);
+        setApps(transformedData);
       } catch (error) {
         console.error("Failed to fetch applications:", error);
       }
@@ -125,11 +131,45 @@ export default function Applications() {
   };
 
   // Edit an existing application
-  const editApplication = (application: Application) => {
-    setApps((prev) =>
-      prev.map((app) => (app._id === application._id ? application : app))
-    );
-    closeEditModal();
+  const editApplication = async (application: Application) => {
+    try {
+      // Make a PUT request to the backend API
+      const response = await fetch(`/api/jobs/${application._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(application),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update application: ${response.statusText}`);
+      }
+
+      const updatedApplication = await response.json();
+
+      updatedApplication.skills =
+        updatedApplication.skills?.map((skill: any) => {
+          if (typeof skill === "object" && skill.name) {
+            return skill.name; // Extract skill name
+          } else if (typeof skill === "string") {
+            return skill; // If already a string, return as-is
+          } else {
+            return ""; // Default to an empty string if neither
+          }
+        }) || [];
+
+      // Update the local state with the backend response
+      setApps((prev) =>
+        prev.map((app) =>
+          app._id === updatedApplication._id ? updatedApplication : app
+        )
+      );
+
+      // Close the modal
+      closeEditModal();
+    } catch (error) {
+      console.error("Error updating application:", error);
+      // Optionally show an error message to the user
+    }
   };
 
   // Delete an existing application
@@ -176,7 +216,7 @@ export default function Applications() {
           {/* Display the application title and company */}
           <div className="flex justify-between items-center">
             <h2 className="text-customdarkgrey text-xl font-bold">
-              {application.jobType} @ {application.companyName}
+              {application.jobTitle} @ {application.companyName}
             </h2>
             <div className="text-customdarkgrey flex flex-row ">
               {/* Add an edit button to open the EditApplicationModal */}
@@ -203,8 +243,10 @@ export default function Applications() {
                 <strong>Status:</strong> {application.applicationStatus}
               </p>
               <p className="text-lg mb-2">
-                <strong>Skills:</strong>{" "}
-                {application.skills?.map((skill) => skill.name).join(", ")}
+                <strong>Job Type:</strong> {application.jobType}
+              </p>
+              <p className="text-lg mb-2">
+                <strong>Skills:</strong> {application.skills}
               </p>
               <p className="text-lg">
                 <strong>Relevant Contacts:</strong>{" "}
