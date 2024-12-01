@@ -1,7 +1,7 @@
 import Job, { IJob } from "../models/job.js";
 import { Types } from "mongoose";
 import { validateId, EntityType } from "../utility/idValidation.js";
-import Skill from "../models/skill.js";
+import Skill, { ISkill } from "../models/skill.js";
 import { SkillService } from "./skillServices.js";
 
 const newService = new SkillService();
@@ -74,19 +74,34 @@ export class JobService {
     if (!job) {
       throw new Error(`Job with ID ${jobId} not found`);
     }
-    console.log("finding skills: skills");
-    // loop thru Skills.SkillName and add them to Skills DB if they don't exist
+
+    // check if job had any already existing skills, if so get the IDs
+    let existingSkillIds: string[] = [];
+    if (job.skills) {
+      existingSkillIds = (job.skills as ISkill[]).map((skill: ISkill) => {
+        const skillId = skill._id as Types.ObjectId;
+        return skillId.toString();
+    });
+}
+
+    // loop thru 'skills' from input, add them to Skills DB if they don't exist, skipping existingSkillIds
     for (const skillName of skills) {
       let existingSkill = await Skill.findOne({ name: skillName });
       if (!existingSkill) {
         existingSkill = await Skill.create({ name: skillName });
       }
-      await job.addSkill(existingSkill._id); // add new Skill to Skills DB
+      if (!existingSkillIds.includes((existingSkill._id as Types.ObjectId).toString())) {
+          await job.addSkill(existingSkill._id); // add new skill if not already present
+      }
     }
 
     // save updates to Job
     Object.assign(job, rest);
-    return await job.save();
+    await job.save();
+
+    // return updated job
+    const updatedJob = await Job.findById(jobId).populate("skills");
+    return updatedJob;
   }
 
   async deleteJob(jobId: string): Promise<IJob | null> {

@@ -107,7 +107,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"companyName\": \"{{companyName2}}\",\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"salary\": {{salary2}},\r\n  \"skills\": [\"Javascript\", \"Google Cloud\"]\r\n}",
+									"raw": "{\r\n  \"companyName\": \"{{companyName2}}\",\r\n  \"applicationStatus\": \"{{appStatus2}}\",\r\n  \"jobType\": \"{{jobType2}}\",\r\n  \"jobTitle\": \"{{jobTitle2}}\",\r\n  \"skills\": [\"HTML\", \"Google Cloud\"]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -547,35 +547,7 @@
 							"response": []
 						},
 						{
-							"name": "200 - Update applicationStatus",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"salary\": null\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{app_url}}/api/jobs/{{jobId2}}",
-									"host": [
-										"{{app_url}}"
-									],
-									"path": [
-										"api",
-										"jobs",
-										"{{jobId2}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "200 - Update applicationStatus Copy",
+							"name": "200 - Update Skills",
 							"request": {
 								"method": "PUT",
 								"header": [],
@@ -609,7 +581,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"jobType\": \"{{invalidJobType}}}}\"\r\n}",
+									"raw": "{\r\n  \"jobType\": \"{{invalidJobType}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

@@ -37,7 +37,7 @@ jobSchema.methods.removeContact = async function (contactId: IContact['_id']): P
 };
 
 jobSchema.methods.addSkill = async function (skillId: ISkill['_id']): Promise<void> {
-    if (!this.skills.includes(skillId)) {
+    if (!this.skills.some((id: any) => id.equals(skillId))) {
         this.skills.push(skillId);
         await this.save();
     }
