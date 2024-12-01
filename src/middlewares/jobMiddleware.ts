@@ -30,11 +30,11 @@ class JobValidators {
     }),
 
     jobTitle: z
-    .string({
-      required_error: "Job Title field is required",
-    })
-    .min(1, { message: "Job Title cannot be empty" })
-    .max(50, { message: "Job Title must be less than 50 characters" }),
+      .string({
+        required_error: "Job Title field is required",
+      })
+      .min(1, { message: "Job Title cannot be empty" })
+      .max(50, { message: "Job Title must be less than 50 characters" }),
 
     contacts: z
       .array(
@@ -46,9 +46,14 @@ class JobValidators {
 
     skills: z
       .array(
-        z.string().refine((val) => mongoose.isValidObjectId(val) || typeof val === "string", {
-          message: "skill must be a string OR a valid ObjectId",
-        })
+        z
+          .string()
+          .refine(
+            (val) => mongoose.isValidObjectId(val) || typeof val === "string",
+            {
+              message: "skill must be a string OR a valid ObjectId",
+            }
+          )
       )
       .optional(),
   });
@@ -75,6 +80,7 @@ const jobValidator = new JobValidators();
 // isPartial = true for PUT requests(partial), false for POST(full) requests
 export const validateJobData = (isPartial: boolean = false) => {
   return (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
     try {
       jobValidator.validateJobData(req.body, isPartial);
       next();

@@ -7,9 +7,10 @@ const jobService = new JobService();
 const router = Router();
 
 // Create a new Job entity. validateJobData = False, all input fields required
-router.post("/",  validateJobData(false), async (req, res) => {
+router.post("/", validateJobData(false), async (req, res) => {
   // uses middleware to validate incoming job data
   try {
+    console.log("Trying to post job.");
     const newJob = await jobService.createJob(req.body);
     res.status(201).json(newJob);
     console.log("Job created successfully:", newJob);
@@ -46,11 +47,14 @@ router.get("/:id", async (req, res) => {
 router.put("/:id?", validateJobData(true), async (req, res) => {
   // uses middleware to validate incoming job data
   try {
+    console.log("Trying to update job");
     const jobId = req.params.id;
+    console.log(req.body);
     const updatedJob = await jobService.updateJob(jobId, req.body);
     res.status(200).json(updatedJob);
     console.log("Job updated successfully:", updatedJob);
   } catch (error) {
+    console.log(error);
     customErrorHandler(error, res);
   }
 });
