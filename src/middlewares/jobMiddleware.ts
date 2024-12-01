@@ -80,7 +80,7 @@ const jobValidator = new JobValidators();
 // isPartial = true for PUT requests(partial), false for POST(full) requests
 export const validateJobData = (isPartial: boolean = false) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
+    console.log("validating job data: ", req.body);
     try {
       jobValidator.validateJobData(req.body, isPartial);
       next();

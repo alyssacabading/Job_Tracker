@@ -128,7 +128,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
       </div>
 
       {/* Contacts */}
-      <div className="flex flex-col mb-2">
+      {/* <div className="flex flex-col mb-2">
         <label htmlFor="contacts" className="text-s font-bold mb-2">
           Relevant Contacts
         </label>
@@ -140,7 +140,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
           placeholder="Contact names (comma-separated)"
           className="mb-4 p-2 border rounded w-full placeholder-italic"
         />
-      </div>
+      </div> */}
 
       {/* Form Footer Buttons */}
       <FormFooterButtons

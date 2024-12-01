@@ -246,14 +246,15 @@ export default function Applications() {
                 <strong>Job Type:</strong> {application.jobType}
               </p>
               <p className="text-lg mb-2">
-                <strong>Skills:</strong> {application.skills}
+                <strong>Skills:</strong>{" "}
+                {application.skills ? application.skills.join(", ") : []}
               </p>
-              <p className="text-lg">
+              {/* <p className="text-lg">
                 <strong>Relevant Contacts:</strong>{" "}
                 {application.contacts
                   ?.map((contact) => `${contact.firstName} ${contact.lastName}`)
                   .join(", ")}
-              </p>
+              </p> */}
             </div>
           )}
         </div>
